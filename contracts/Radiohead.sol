@@ -6,10 +6,31 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
+contract Escrow {
+    function buyRegularSong(
+        uint songId,
+        address payable _radio,
+        address artist,
+        address to
+    ) external {
+        Radiohead(_radio).safeTransferFrom(artist, to, songId, 1, "");
+    }
+
+    function buyLimitedSong(
+        uint ltdSongId,
+        address payable _radio,
+        address artist,
+        address to
+    ) external {
+        Radiohead(_radio).safeTransferFrom(artist, to, ltdSongId, 1, "");
+    }
+}
+
 contract Radiohead is ERC1155, Ownable, ERC1155Supply {
     using Counters for Counters.Counter;
     Counters.Counter private _songIdCounter;
     address private _owner;
+    Escrow private escrow;
 
     // A single song will have two songIds, one belongs to unlimited edition and anoter one belongs to limited ones
 
@@ -24,16 +45,15 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
 
     mapping(uint => Song) public songs; // we are using regular song Id's to map songs. these are all odd numbers.
 
-    constructor() ERC1155("") {
+    constructor(address _escrow) ERC1155("") {
         _songIdCounter.increment();
         _owner = msg.sender;
+        escrow = Escrow(_escrow);
     }
 
     function setURI(string memory newuri) public onlyOwner {
         _setURI(newuri);
     }
-
-    event whoIsTheCaller(address caller);
 
     function createSong(
         uint _limitedSupply,
@@ -59,18 +79,29 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
         currentSong.ltdSongId = ltdSongId;
 
         _songIdCounter.increment();
-        if (!isApprovedForAll(msg.sender, address(this))) {
-            setApprovalForAll(address(this), true);
+        if (!isApprovedForAll(msg.sender, address(escrow))) {
+            setApprovalForAll(address(escrow), true);
         }
     }
 
     function buyRegularSong(uint songId) external {
-        safeTransferFrom(address(this), msg.sender, songId, 1, "");
+        //safeTransferFrom(address(this), msg.sender, songId, 1, "");
+        escrow.buyRegularSong(
+            songId,
+            payable(address(this)),
+            songs[songId].artist,
+            msg.sender
+        );
     }
 
     function buyLimitedSong(uint songId) external {
         uint ltdSongId = songs[songId].ltdSongId;
-        safeTransferFrom(address(this), msg.sender, ltdSongId, 1, "");
+        escrow.buyRegularSong(
+            ltdSongId,
+            payable(address(this)),
+            songs[songId].artist,
+            msg.sender
+        );
     }
 
     // function transfer(address to, uint songId, uint amount, string memory class) external {

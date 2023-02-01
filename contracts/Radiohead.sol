@@ -1,30 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
+import "./Escrow.sol";
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-
-contract Escrow {
-    function buyRegularSong(
-        uint songId,
-        address payable _radio,
-        address artist,
-        address to
-    ) external {
-        Radiohead(_radio).safeTransferFrom(artist, to, songId, 1, "");
-    }
-
-    function buyLimitedSong(
-        uint ltdSongId,
-        address payable _radio,
-        address artist,
-        address to
-    ) external {
-        Radiohead(_radio).safeTransferFrom(artist, to, ltdSongId, 1, "");
-    }
-}
 
 contract Radiohead is ERC1155, Ownable, ERC1155Supply {
     using Counters for Counters.Counter;
@@ -103,18 +84,6 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
             msg.sender
         );
     }
-
-    // function transfer(address to, uint songId, uint amount, string memory class) external {
-    //     safeTransferFrom(msg.sender, to, songId, amount, bytes(class));
-    // }
-
-    // function listSong() external {
-
-    // }
-
-    // function buySong() external {
-
-    // }
 
     // function withdraw() external {
 

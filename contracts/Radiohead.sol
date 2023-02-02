@@ -6,8 +6,9 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 
-contract Radiohead is ERC1155, Ownable, ERC1155Supply {
+contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
     using Counters for Counters.Counter;
     Counters.Counter private songIdCounter;
     Escrow private escrow;
@@ -38,21 +39,19 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
         escrow = Escrow(_escrow);
     }
 
-    function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
-    }
-
     function createSong(
         uint _limitedSupply,
         uint _regularSongPrice,
         uint _limitedSongPrice,
+        string memory _regularSongURI,
+        string memory _limitedSongURI,
         uint _platformRoyality,
         uint _superfanRoyality
     ) external {
         require(_limitedSupply > 0, "Limited supply must be greater than 0");
         uint songId = songIdCounter.current();
         _mint(msg.sender, songId, 10 ** 18, "");
-
+        _setURI(songId, _regularSongURI);
         Song storage currentSong = songs[songId];
         currentSong.artist = msg.sender;
         currentSong.songId = songId;
@@ -66,9 +65,9 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
 
         uint ltdSongId = songIdCounter.current();
         _mint(msg.sender, ltdSongId, _limitedSupply, "");
+        _setURI(ltdSongId, _limitedSongURI);
 
         currentSong.ltdSongId = ltdSongId;
-
         songIdCounter.increment();
         if (!isApprovedForAll(msg.sender, address(escrow))) {
             setApprovalForAll(address(escrow), true);
@@ -172,6 +171,18 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
     }
 
     // The following functions are overrides required by Solidity.
+
+    function uri(
+        uint256 tokenId
+    )
+        public
+        view
+        virtual
+        override(ERC1155, ERC1155URIStorage)
+        returns (string memory)
+    {
+        return ERC1155URIStorage.uri(tokenId);
+    }
 
     function _beforeTokenTransfer(
         address operator,

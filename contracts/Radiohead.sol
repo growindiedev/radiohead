@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract Radiohead is ERC1155, Ownable, ERC1155Supply {
     using Counters for Counters.Counter;
     Counters.Counter private _songIdCounter;
-    address private _owner;
+    address private owner;
     Escrow private escrow;
 
     // A single song will have two songIds, one belongs to unlimited edition and anoter one belongs to limited ones
@@ -26,7 +26,6 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
         uint regularRevenue;
         uint ltdRevenue;
         uint platformRoyality;
-        uint artistRoyality;
         uint superfanRoyality;
         address[] superfans;
     }
@@ -37,7 +36,7 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
 
     constructor(address _escrow) ERC1155("") {
         _songIdCounter.increment();
-        _owner = msg.sender;
+        owner = msg.sender;
         escrow = Escrow(_escrow);
     }
 
@@ -50,7 +49,6 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
         uint _regularSongPrice,
         uint _limitedSongPrice,
         uint _platformRoyality,
-        uint _artistRoyality,
         uint _superfanRoyality
     ) external {
         require(_limitedSupply > 0, "Limited supply must be greater than 0");
@@ -64,7 +62,6 @@ contract Radiohead is ERC1155, Ownable, ERC1155Supply {
         currentSong.regularPrice = _regularSongPrice;
         currentSong.limitedPrice = _limitedSongPrice;
         currentSong.platformRoyality = _platformRoyality;
-        currentSong.artistRoyality = _artistRoyality;
         currentSong.superfanRoyality = _superfanRoyality;
 
         _songIdCounter.increment();

@@ -30,8 +30,9 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         address[] superfans;
     }
 
-    mapping(uint => Song) public songs;
     mapping(address => uint[]) public songOwners;
+    mapping(uint => Song) public songs;
+    Song[] public songsArray;
     // we are using regular song Id's to map songs. these are all odd numbers.
 
     event regularSongBought(uint id, address buyer);
@@ -59,7 +60,7 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         string memory _limitedSongURI,
         uint _platformRoyality,
         uint _superfanRoyality
-    ) external returns (uint songId, uint ltdSongId) {
+    ) external returns (uint songId) {
         require(_limitedSupply > 0, "Limited supply must be greater than 0");
         songIdCounter.increment();
         songId = songIdCounter.current();
@@ -75,11 +76,13 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         currentSong.superfanRoyality = _superfanRoyality;
 
         songIdCounter.increment();
-        ltdSongId = songIdCounter.current();
+        uint ltdSongId = songIdCounter.current();
         _mint(msg.sender, ltdSongId, _limitedSupply, "");
         _setURI(ltdSongId, _limitedSongURI);
 
         currentSong.ltdSongId = ltdSongId;
+
+        songsArray.push(currentSong);
         if (!isApprovedForAll(msg.sender, address(escrow))) {
             setApprovalForAll(address(escrow), true);
         }
@@ -152,8 +155,8 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
     }
 
     function withdrawRoyalities() external {
-        uint totalSongs = songIdCounter.current();
-        for (uint i = 1; i <= totalSongs; i += 2) {
+        // uint totalSongs = songIdCounter.current();
+        for (uint i = 1; i <= songsArray.length; i += 2) {
             Song storage currentSong = songs[i];
             require(exists(i), "the song doesnt exists");
 

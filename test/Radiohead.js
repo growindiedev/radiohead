@@ -3,62 +3,95 @@ const { ethers } = require("hardhat");
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 const { parseEther } = require("ethers/lib/utils");
 
-// Record 721
-// • should deploy (638ms)
-// Record 1155
-// + should deploy (75ms)
-// Jukebox
-// constructor()
-// r should deploy (80ms)
-// press__721()
-// r should press Record_721 clones (79ms)
-// r record clones should only allow owner to mint (45ms)
-// press_1155()
-// should press Record 1155 clones (46ms)
-// record clones should only allow owner to mint pressRecord ()
-// • should press records (94ms)
-// + should add pressed records to the catalog getCatalog ()
-// • should return a catalog of records recordIndex ()
-// should locate records in the catalog (87ms)
-// mintRecord ()
-// • should mint limited edition records (59ms)
-// • should mint standard issue records (49ms)
-// • should store jukebox revenue on the contract
-// • should track revenue earned on a per record basis
-// distributeRevenue()
-// should distribute revenue to artists, charities, and ltd. minters (52ms)
+const deployRadioheadFixture = async () => {
+  const [owner, artist1, artist2, regularBuyer, superFan] =
+    await ethers.getSigners();
+  const Escrow = await ethers.getContractFactory("Escrow");
+  const escrow = await Escrow.deploy();
 
-describe("Deploy radiohead and  contract", function () {
-  async function deployRadioheadFixture() {
-    const [owner, artist1, artist2] = await ethers.getSigners();
+  const Radiohead = await ethers.getContractFactory("Radiohead");
+  const radiohead = await Radiohead.deploy(escrow.address);
+
+  let song = await radiohead
+    .connect(artist1)
+    .createSong(
+      15,
+      parseEther("0.1"),
+      parseEther("0.5"),
+      "regular1",
+      "limited1",
+      5,
+      20
+    );
+
+  return {
+    escrow,
+    radiohead,
+    owner,
+    artist1,
+    artist2,
+    regularBuyer,
+    superFan,
+  };
+};
+
+describe("Deployment", function () {
+  it("Can deploy Escrow and Radiohead contract", async () => {
     const Escrow = await ethers.getContractFactory("Escrow");
     const escrow = await Escrow.deploy();
-    console.log("escrow", escrow.address);
-
     const Radiohead = await ethers.getContractFactory("Radiohead");
     const radiohead = await Radiohead.deploy(escrow.address);
-    console.log("radiohead", radiohead.address);
 
-    // Fixtures can return anything you consider useful for your tests
-    return { escrow, radiohead, owner, artist1, artist2 };
-  }
+    expect(ethers.utils.isAddress(radiohead.address)).to.be.true;
+  });
+});
 
-  it("artist can  create a song", async function () {
-    const { radiohead, owner, artist1 } = await loadFixture(
+describe("create a song", () => {
+  it("create a  regular song", async function () {
+    const { radiohead, artist1 } = await loadFixture(deployRadioheadFixture);
+    let currentSongCounter = await radiohead.getCurrentSongId();
+    expect(
+      await radiohead.balanceOf(artist1.address, currentSongCounter - 1)
+    ).to.equal(BigInt(10 ** 18)); //regular songs
+  });
+
+  it("create a limited song", async () => {
+    const { radiohead, artist1 } = await loadFixture(deployRadioheadFixture);
+    let currentSongCounter = await radiohead.getCurrentSongId();
+    expect(
+      await radiohead.balanceOf(artist1.address, currentSongCounter)
+    ).to.equal(15); //limited songs
+  });
+
+  it("approve escrow to sell songs on behalf of artist", async () => {
+    const { radiohead, artist1, escrow } = await loadFixture(
       deployRadioheadFixture
     );
-    await radiohead
-      .connect(artist1)
-      .createSong(
-        15,
-        parseEther("0.1"),
-        parseEther("0.5"),
-        "regular1",
-        "limited1",
-        5,
-        20
-      );
-    expect(await radiohead.exists((await radiohead.getCurrentSongId()) - 1)).to
+    expect(await radiohead.isApprovedForAll(artist1.address, escrow.address)).to
       .be.true;
   });
 });
+
+describe("buy song", async () => {
+  it("buyer can buy a regular song", async () => {
+    const { radiohead, regularBuyer } = await loadFixture(
+      deployRadioheadFixture
+    );
+    await radiohead
+      .connect(regularBuyer)
+      .buyRegularSong(1, { value: ethers.utils.parseEther("0.1") });
+
+    expect(await radiohead.balanceOf(regularBuyer.address, 1)).to.equal(1);
+  });
+
+  it("buyer can buy a limited edition song", async () => {
+    const { radiohead, superFan } = await loadFixture(deployRadioheadFixture);
+    await radiohead
+      .connect(superFan)
+      .buyLimitedSong(1, { value: ethers.utils.parseEther("0.5") });
+
+    expect(await radiohead.balanceOf(superFan.address, 2)).to.equal(1);
+  });
+});
+
+// it("royalities are divided evenly and distributed to respective parties", async () => {});

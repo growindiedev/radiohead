@@ -31,11 +31,23 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
     }
 
     mapping(uint => Song) public songs;
-
+    mapping(address => uint[]) public songOwners;
     // we are using regular song Id's to map songs. these are all odd numbers.
 
+    event regularSongBought(uint id, address buyer);
+    event limitedSongBought(uint id, address superfan);
+    event songCreated(
+        uint songId,
+        uint ltdSongId,
+        address artist,
+        uint limitedSupply,
+        uint regularPrice,
+        uint limitedPrice,
+        uint platformRoyality,
+        uint superfanRoyality
+    );
+
     constructor(address _escrow) ERC1155("") {
-        songIdCounter.increment();
         escrow = Escrow(_escrow);
     }
 
@@ -47,9 +59,10 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         string memory _limitedSongURI,
         uint _platformRoyality,
         uint _superfanRoyality
-    ) external {
+    ) external returns (uint songId, uint ltdSongId) {
         require(_limitedSupply > 0, "Limited supply must be greater than 0");
-        uint songId = songIdCounter.current();
+        songIdCounter.increment();
+        songId = songIdCounter.current();
         _mint(msg.sender, songId, 10 ** 18, "");
         _setURI(songId, _regularSongURI);
         Song storage currentSong = songs[songId];
@@ -62,40 +75,64 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         currentSong.superfanRoyality = _superfanRoyality;
 
         songIdCounter.increment();
-
-        uint ltdSongId = songIdCounter.current();
+        ltdSongId = songIdCounter.current();
         _mint(msg.sender, ltdSongId, _limitedSupply, "");
         _setURI(ltdSongId, _limitedSongURI);
 
         currentSong.ltdSongId = ltdSongId;
-        songIdCounter.increment();
         if (!isApprovedForAll(msg.sender, address(escrow))) {
             setApprovalForAll(address(escrow), true);
         }
+
+        emit songCreated(
+            currentSong.songId,
+            currentSong.ltdSongId,
+            currentSong.artist,
+            currentSong.limitedSupply,
+            currentSong.regularPrice,
+            currentSong.limitedPrice,
+            currentSong.platformRoyality,
+            currentSong.superfanRoyality
+        );
     }
 
     function buyRegularSong(uint songId) external payable {
-        Song storage currentSong = songs[songId];
-        require(exists(songId), "the songId doesn't exists or not valid");
+        Song storage currentSong;
+        if (songId % 2 != 0) {
+            require(exists(songId), "the song doesn't exists");
+            currentSong = songs[songId];
+        } else {
+            require(exists(songId - 1), "the song doesn't exists");
+            currentSong = songs[songId - 1];
+        }
+        require(
+            exists(currentSong.songId),
+            "the songId doesn't exists or not valid"
+        );
         require(
             msg.value >= currentSong.regularPrice,
             "Please pay the full amount"
         );
         currentSong.regularRevenue += msg.value;
         escrow.buyRegularSong(
-            songId,
+            currentSong.songId,
             payable(address(this)),
             currentSong.artist,
             msg.sender
         );
+        songOwners[msg.sender].push(songId);
+        emit regularSongBought(songId, msg.sender);
     }
 
     function buyLimitedSong(uint songId) external payable {
-        Song storage currentSong = songs[songId];
-        require(
-            exists(currentSong.ltdSongId),
-            "the songId doesn't exists or not valid"
-        );
+        Song storage currentSong;
+        if (songId % 2 != 0) {
+            require(exists(songId), "the song doesn't exists");
+            currentSong = songs[songId];
+        } else {
+            require(exists(songId - 1), "the song doesn't exists");
+            currentSong = songs[songId - 1];
+        }
         require(currentSong.limitedSongMinted < currentSong.limitedSupply, "");
         require(
             msg.value >= currentSong.limitedPrice,
@@ -110,6 +147,8 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
             currentSong.artist,
             msg.sender
         );
+        songOwners[msg.sender].push(currentSong.ltdSongId);
+        emit limitedSongBought(currentSong.ltdSongId, msg.sender);
     }
 
     function withdrawRoyalities() external {
@@ -168,6 +207,20 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         //calculate royalities per song for different parties
         //distribute royalities to different parties
         // reset all revenues
+    }
+
+    function getCurrentSongId() external view returns (uint current) {
+        current = songIdCounter.current();
+    }
+
+    function getSong(uint id) external view returns (Song memory song) {
+        if (id % 2 != 0) {
+            require(exists(id), "the song doesn't exists");
+            song = songs[id];
+        } else {
+            require(exists(id - 1), "the song doesn't exists");
+            song = songs[id - 1];
+        }
     }
 
     // The following functions are overrides required by Solidity.

@@ -13,8 +13,6 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
     Counters.Counter private songIdCounter;
     Escrow private escrow;
 
-    // A single song will have two songIds, one belongs to unlimited edition and anoter one belongs to limited ones
-
     struct Song {
         address artist;
         uint songId;
@@ -31,8 +29,9 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
     }
 
     mapping(address => uint[]) public songOwners;
-    mapping(uint => Song) public songs;
+    // A single song will have two songIds, one belongs to unlimited edition and anoter one belongs to limited ones
     Song[] public songsArray;
+    mapping(uint => uint) public songIndex; //songId to songsArray Index
     // we are using regular song Id's to map songs. these are all odd numbers.
 
     event regularSongBought(uint id, address buyer);
@@ -66,7 +65,8 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         songId = songIdCounter.current();
         _mint(msg.sender, songId, 10 ** 18, "");
         _setURI(songId, _regularSongURI);
-        Song storage currentSong = songs[songId];
+        // Proposal storage proposal = proposals.push();
+        Song storage currentSong = songsArray.push();
         currentSong.artist = msg.sender;
         currentSong.songId = songId;
         currentSong.limitedSupply = _limitedSupply;
@@ -82,11 +82,10 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
 
         currentSong.ltdSongId = ltdSongId;
 
-        songsArray.push(currentSong);
         if (!isApprovedForAll(msg.sender, address(escrow))) {
             setApprovalForAll(address(escrow), true);
         }
-
+        songIndex[songId] = songsArray.length - 1;
         emit songCreated(
             currentSong.songId,
             currentSong.ltdSongId,
@@ -103,10 +102,10 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         Song storage currentSong;
         if (songId % 2 != 0) {
             require(exists(songId), "the song doesn't exists");
-            currentSong = songs[songId];
+            currentSong = songsArray[songIndex[songId]];
         } else {
             require(exists(songId - 1), "the song doesn't exists");
-            currentSong = songs[songId - 1];
+            currentSong = songsArray[songIndex[songId - 1]];
         }
         require(
             exists(currentSong.songId),
@@ -131,10 +130,10 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         Song storage currentSong;
         if (songId % 2 != 0) {
             require(exists(songId), "the song doesn't exists");
-            currentSong = songs[songId];
+            currentSong = songsArray[songIndex[songId]];
         } else {
             require(exists(songId - 1), "the song doesn't exists");
-            currentSong = songs[songId - 1];
+            currentSong = songsArray[songIndex[songId - 1]];
         }
         require(currentSong.limitedSongMinted < currentSong.limitedSupply, "");
         require(
@@ -155,10 +154,9 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
     }
 
     function withdrawRoyalities() external {
-        // uint totalSongs = songIdCounter.current();
-        for (uint i = 1; i <= songsArray.length; i += 2) {
-            Song storage currentSong = songs[i];
-            require(exists(i), "the song doesnt exists");
+        for (uint i = 0; i < songsArray.length; i++) {
+            Song storage currentSong;
+            currentSong = songsArray[i];
 
             // for regular songs
             uint platformRevenueRegular = (currentSong.regularRevenue / 100) *
@@ -204,25 +202,19 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
                 );
             }
         }
-        // iterate a loop till songIdCounter.current(), regular song id's are always odd so keep that in mind
-        //go through every song in songs mapping
-        // check if the song exists and if the current song is limited or reguar
-        //calculate royalities per song for different parties
-        //distribute royalities to different parties
-        // reset all revenues
     }
 
     function getCurrentSongId() external view returns (uint current) {
         current = songIdCounter.current();
     }
 
-    function getSong(uint id) external view returns (Song memory song) {
+    function getSong(uint id) public view returns (Song memory song) {
         if (id % 2 != 0) {
             require(exists(id), "the song doesn't exists");
-            song = songs[id];
+            song = songsArray[songIndex[id]];
         } else {
             require(exists(id - 1), "the song doesn't exists");
-            song = songs[id - 1];
+            song = songsArray[songIndex[id - 1]];
         }
     }
 

@@ -8,10 +8,11 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 
-contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
+contract Radiohead is ERC1155URIStorage, ERC1155Supply {
     using Counters for Counters.Counter;
     Counters.Counter private songIdCounter;
     Escrow private escrow;
+    address public Owner;
 
     struct Song {
         address artist;
@@ -49,6 +50,7 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
 
     constructor(address _escrow) ERC1155("") {
         escrow = Escrow(_escrow);
+        Owner = msg.sender;
     }
 
     function createSong(
@@ -65,7 +67,6 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         songId = songIdCounter.current();
         _mint(msg.sender, songId, 10 ** 18, "");
         _setURI(songId, _regularSongURI);
-        // Proposal storage proposal = proposals.push();
         Song storage currentSong = songsArray.push();
         currentSong.artist = msg.sender;
         currentSong.songId = songId;
@@ -210,6 +211,15 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
                 );
             }
         }
+
+        (bool sentOwner, ) = payable(Owner).call{value: address(this).balance}(
+            ""
+        );
+
+        require(
+            sentOwner,
+            "failed to disribute royalities to the plaform Owner"
+        );
     }
 
     function getCurrentSongId() external view returns (uint current) {

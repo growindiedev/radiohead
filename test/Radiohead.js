@@ -2,6 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 const { parseEther, formatEther } = require("ethers/lib/utils");
+const { json } = require("hardhat/internal/core/params/argumentTypes");
 
 const deployRadioheadFixture = async () => {
 	const [
@@ -64,8 +65,8 @@ const deployWithdrawFixture = async () => {
 	await radiohead
 		.connect(artist1)
 		.createSong(
-			15,
-			parseEther("1"),
+			6,
+			parseEther("2"),
 			parseEther("5"),
 			"regular1",
 			"limited1",
@@ -78,24 +79,28 @@ const deployWithdrawFixture = async () => {
 		.createSong(
 			3,
 			parseEther("3"),
-			parseEther("6"),
+			parseEther("7"),
 			"regular2",
 			"limited2",
 			4,
 			17
 		);
 
-	await radiohead
-		.connect(regularBuyer1)
-		.buyRegularSong(1, { value: parseEther("3") });
+	// await radiohead
+	// 	.connect(regularBuyer1)
+	// 	.buyRegularSong(1, { value: parseEther("2") });
 
-	await radiohead
-		.connect(regularBuyer1)
-		.buyRegularSong(1, { value: parseEther("3") });
+	// await radiohead
+	// 	.connect(regularBuyer1)
+	// 	.buyRegularSong(1, { value: parseEther("2") });
+
+	// await radiohead
+	// 	.connect(superFan1)
+	// 	.buyLimitedSong(1, { value: parseEther("5") });
 
 	await radiohead
 		.connect(regularBuyer2)
-		.buyRegularSong(1, { value: parseEther("3") });
+		.buyRegularSong(3, { value: parseEther("3") });
 
 	await radiohead
 		.connect(regularBuyer2)
@@ -103,15 +108,15 @@ const deployWithdrawFixture = async () => {
 
 	await radiohead
 		.connect(superFan1)
-		.buyLimitedSong(1, { value: parseEther("6") });
+		.buyLimitedSong(3, { value: parseEther("7") });
 
 	await radiohead
 		.connect(superFan1)
-		.buyLimitedSong(3, { value: parseEther("6") });
+		.buyLimitedSong(3, { value: parseEther("7") });
 
-	await radiohead
-		.connect(superFan2)
-		.buyLimitedSong(3, { value: parseEther("6") });
+	// await radiohead
+	// 	.connect(superFan2)
+	// 	.buyLimitedSong(3, { value: parseEther("7") });
 
 	return {
 		escrow,
@@ -179,9 +184,7 @@ describe("buy song", async () => {
 		const { radiohead, superFan } = await loadFixture(deployRadioheadFixture);
 		await radiohead
 			.connect(superFan)
-			.buyLimitedSong(1, { value: parseEther("50") });
-		//const platformBalance = await ;
-		//console.log("radiohead", formatEther(platformBalance));
+			.buyLimitedSong(1, { value: parseEther("5") });
 		expect(await radiohead.balanceOf(superFan.address, 2)).to.equal(1);
 	});
 
@@ -203,28 +206,64 @@ describe("withdraw funds", async () => {
 			superFan2,
 		} = await loadFixture(deployWithdrawFixture);
 
-		const prevBalance = await artist1.getBalance();
-		const platformBalancePrev = await ethers.provider.getBalance(
-			radiohead.address
-		);
-		//console.log("prev", formatEther(platformBalancePrev));
-		console.log("prev", formatEther(prevBalance));
+		const toRound = (num) => {
+			String(num).slice(0, 5);
+		};
 
-		//console.log("song 3 bal prev", await radiohead.songsArray(0));
-		console.log("songa", await radiohead.getSong(1));
-
+		const song = await radiohead.getSong(3);
+		const prevArtist1Balance = await artist1.getBalance();
+		const prevSuperfan1Balance = await superFan1.getBalance();
 		await radiohead.connect(artist1).withdrawRoyalities();
-		const currentBalance = await artist1.getBalance();
-		//console.log("song 3 bal now", await radiohead.songsArray(0));
+		let platformBalance = await ethers.provider.getBalance(radiohead.address);
+		//platformBalance = platformBalance.toString().slice(0, 4);
+		const currentArtist1Balance = await artist1.getBalance();
+		const currentSuperfan1Balance = await superFan1.getBalance();
+		const artist1Balance = currentArtist1Balance - prevArtist1Balance;
+		// .toString()
+		// .slice(0, 4);
+		const superfan1Balance = currentSuperfan1Balance - prevSuperfan1Balance;
+		// .toString()
+		// .slice(0, 4);
 
-		const platformBalanceCurr = await ethers.provider.getBalance(
-			radiohead.address
-		);
-		console.log("current", formatEther(currentBalance));
-		//console.log("songa", await radiohead.getSong(1));
+		const calcPlatformRoyality =
+			(song.platformRoyality * song.ltdRevenue) / 100 +
+			(song.platformRoyality * song.regularRevenue) / 100;
+		// .toString()
+		// .slice(0, 4);
+		let superfan1Songs = await radiohead.getSongOwners(superFan1.address);
+		let noOfOwnedfGivenSong = superfan1Songs
+			.map((i) => Number(i))
+			.reduce((acc, item) => {
+				if (item == Number(song.ltdSongId)) {
+					acc += 1;
+				}
+				return acc;
+			}, 0);
 
-		//expect(platformBalance).to.greaterThan(0);
+		const calcSuperfanRoyality =
+			(((song.regularRevenue / 100) * song.superfanRoyality) /
+				song.limitedSupply) *
+			noOfOwnedfGivenSong;
+		// .toString()
+		// .slice(0, 4);
+
+		const calcArtist1Royality =
+			song.regularRevenue -
+			(song.platformRoyality * song.regularRevenue) / 100 +
+			(song.ltdRevenue - (song.platformRoyality * song.ltdRevenue) / 100) -
+			calcSuperfanRoyality * song.superfans.length;
+
+		// const calcArtist1Royality = (
+		// 	song.regularRevenue +
+		// 	song.ltdRevenue -
+		// 	platformBalance -
+		// 	calcSuperfanRoyality * song.superfans.length
+		// )
+		// 	.toString()
+		// 	.slice(0, 4);
+		//expect(BigInt(calcSuperfanRoyality)).to.equal(BigInt(superfan1Balance));
+		expect(BigInt(calcPlatformRoyality)).to.equal(BigInt(platformBalance));
+
+		expect(BigInt(calcArtist1Royality)).to.equal(BigInt(artist1Balance));
 	});
 });
-
-// it("royalities are divided evenly and distributed to respective parties", async () => {});

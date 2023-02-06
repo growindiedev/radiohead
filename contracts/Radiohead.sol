@@ -115,6 +115,10 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
             msg.value >= currentSong.regularPrice,
             "Please pay the full amount"
         );
+        require(
+            currentSong.artist != msg.sender,
+            "you cannot buy your own song"
+        );
         currentSong.regularRevenue += msg.value;
         escrow.buyRegularSong(
             currentSong.songId,
@@ -139,6 +143,10 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
         require(
             msg.value >= currentSong.limitedPrice,
             "Please pay the full amount"
+        );
+        require(
+            currentSong.artist != msg.sender,
+            "you cannot buy your own song"
         );
         currentSong.limitedSongMinted += 1;
         currentSong.ltdRevenue += msg.value;
@@ -216,6 +224,12 @@ contract Radiohead is Ownable, ERC1155URIStorage, ERC1155Supply {
             require(exists(id - 1), "the song doesn't exists");
             song = songsArray[songIndex[id - 1]];
         }
+    }
+
+    function getSongOwners(
+        address party
+    ) public view returns (uint[] memory songs) {
+        songs = songOwners[party];
     }
 
     // The following functions are overrides required by Solidity.

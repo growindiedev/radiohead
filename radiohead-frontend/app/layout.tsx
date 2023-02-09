@@ -1,5 +1,7 @@
 import WagmiContext from "./components/WagmiContext";
 import ConnectButton from "./components/ConnectButton";
+import Link from "next/link";
+
 import "./globals.css";
 
 export default function RootLayout({
@@ -36,30 +38,27 @@ export default function RootLayout({
 									className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
 								>
 									<li>
-										<a>Platform</a>
+										<Link href="/create">Create</Link>
 									</li>
 									<li>
-										<a>Create Song</a>
-									</li>
-									<li>
-										<a>About</a>
+										<Link href="/about">About</Link>
 									</li>
 								</ul>
 							</div>
-							<a className="btn btn-ghost normal-case text-xl">
+							<Link
+								href="/create"
+								className="btn btn-ghost normal-case text-xl"
+							>
 								📻💀 RadioHEAD
-							</a>
+							</Link>
 						</div>
 						<div className="navbar-center hidden lg:flex">
 							<ul className="menu menu-horizontal px-1">
 								<li>
-									<a>Platform</a>
+									<Link href="/create">Create</Link>
 								</li>
 								<li>
-									<a>Create Song</a>
-								</li>
-								<li>
-									<a>About</a>
+									<Link href="/about">About</Link>
 								</li>
 							</ul>
 						</div>

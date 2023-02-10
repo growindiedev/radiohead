@@ -41,6 +41,9 @@ export default function RootLayout({
 										<Link href="/create">Create</Link>
 									</li>
 									<li>
+										<Link href="/withdraw">Withdraw</Link>
+									</li>
+									<li>
 										<Link href="/about">About</Link>
 									</li>
 								</ul>
@@ -58,6 +61,9 @@ export default function RootLayout({
 									<Link href="/create">Create</Link>
 								</li>
 								<li>
+									<Link href="/withdraw">Withdraw</Link>
+								</li>
+								<li>
 									<Link href="/about">About</Link>
 								</li>
 							</ul>
@@ -66,7 +72,10 @@ export default function RootLayout({
 							<ConnectButton />
 						</div>
 					</div>
-					<div>{children}</div>
+					{/* <div className="h-[calc(100vh-4rem)] border-4 border-red-700 overflow-y-scroll"> */}
+					<div className="h-[calc(100vh-4rem)] overflow-y-scroll">
+						{children}
+					</div>
 				</WagmiContext>
 			</body>
 		</html>

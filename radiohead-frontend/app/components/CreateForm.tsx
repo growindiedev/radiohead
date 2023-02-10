@@ -11,7 +11,10 @@ export default function CreateForm() {
 	console.log(errors);
 
 	return (
-		<form onSubmit={handleSubmit(() => alert("submitted"))}>
+		<form
+			className="grid sm:grid-cols-2 grid-cols-1 gap-4 min-w-2/3 min-h-2/3 place-items-center"
+			onSubmit={handleSubmit(() => alert("submitted"))}
+		>
 			<div className="form-control w-full max-w-xs">
 				<label className="label">
 					<span className="label-text">Audio</span>
@@ -100,12 +103,12 @@ export default function CreateForm() {
 			</div>
 			<input
 				className="input input-bordered input-primary w-full max-w-xs"
-				type="text"
-				placeholder="Regular Price"
-				{...register("Regular Price", { required: true })}
+				type="number"
+				placeholder="Regular Edition Price"
+				{...register("Regular Edition Price", { required: true })}
 			/>
 
-			<input type="submit" className="btn" />
+			<input type="submit" className="btn w-full max-w-xs" />
 		</form>
 	);
 }

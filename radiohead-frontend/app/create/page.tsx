@@ -1,5 +1,7 @@
+import CreateForm from "../components/CreateForm";
+
 const Create = () => {
-	return <div>This is create page</div>;
+	return <CreateForm />;
 };
 
 export default Create;

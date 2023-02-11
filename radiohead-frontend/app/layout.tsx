@@ -48,10 +48,7 @@ export default function RootLayout({
 									</li>
 								</ul>
 							</div>
-							<Link
-								href="/create"
-								className="btn btn-ghost normal-case text-xl"
-							>
+							<Link href="/" className="btn btn-ghost normal-case text-xl">
 								📻💀 RadioHEAD
 							</Link>
 						</div>

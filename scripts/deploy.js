@@ -6,11 +6,19 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 
-async function main() {}
+async function main() {
+	const Escrow = await ethers.getContractFactory("Escrow");
+	const escrow = await Escrow.deploy();
+
+	const Radiohead = await ethers.getContractFactory("Radiohead");
+	const radiohead = await Radiohead.deploy(escrow.address);
+
+	console.log("radiohead", radiohead.address);
+}
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+	console.error(error);
+	process.exitCode = 1;
 });

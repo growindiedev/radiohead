@@ -12,7 +12,7 @@ export default function CreateForm() {
 
 	return (
 		<form
-			className="grid sm:grid-cols-2 grid-cols-1 gap-4 min-w-2/3 min-h-2/3 place-items-center"
+			className="grid sm:grid-cols-2 grid-cols-1 gap-4 min-w-2/3 min-h-2/3 place-items-center border p-16"
 			onSubmit={handleSubmit(() => alert("submitted"))}
 		>
 			<div className="form-control w-full max-w-xs">

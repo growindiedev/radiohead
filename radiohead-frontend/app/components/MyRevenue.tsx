@@ -1,6 +1,6 @@
 const MyRevenue = () => {
 	return (
-		<div className="card bg-base-100 shadow-xl w-2/3">
+		<div className="card bg-base-100 shadow-lg w-2/3 border">
 			<div className="card-body items-center text-center">
 				<h2 className="card-title">My Revenue Distribution 💸</h2>
 				<table className="table w-full">

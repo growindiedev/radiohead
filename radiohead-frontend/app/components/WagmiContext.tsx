@@ -2,12 +2,18 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { polygon, goerli, polygonMumbai, fantomTestnet } from "wagmi/chains";
+import {
+	polygon,
+	goerli,
+	polygonMumbai,
+	fantomTestnet,
+	localhost,
+} from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
-	[goerli, polygonMumbai, fantomTestnet],
+	[goerli, polygonMumbai, fantomTestnet, localhost],
 	[
 		alchemyProvider({ apiKey: process.env.GOERLI_ALCHEMY_ID! }),
 		alchemyProvider({ apiKey: process.env.MUMBAI_ALCHEMY_ID! }),
@@ -28,7 +34,9 @@ const wagmiClient = createClient({
 const WagmiContext = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<WagmiConfig client={wagmiClient}>
-			<RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
+			<RainbowKitProvider chains={chains} coolMode>
+				{children}
+			</RainbowKitProvider>
 		</WagmiConfig>
 	);
 };

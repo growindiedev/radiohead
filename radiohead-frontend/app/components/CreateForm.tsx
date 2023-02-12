@@ -75,15 +75,15 @@ export default function CreateForm() {
 					className="select select-primary select-bordered select-sm w-full max-w-xs"
 					{...register("Superfans", { required: true })}
 				>
-					<option value="5">5</option>
-					<option value=" 10"> 10</option>
-					<option value=" 15"> 15</option>
-					<option value=" 20"> 20</option>
-					<option value=" 25"> 25</option>
-					<option value=" 30"> 30</option>
-					<option value=" 35"> 35</option>
-					<option value=" 40"> 40</option>
-					<option value=" 50"> 50</option>
+					<option value="5">5%</option>
+					<option value=" 10"> 10%</option>
+					<option value=" 15"> 15%</option>
+					<option value=" 20"> 20%</option>
+					<option value=" 25"> 25%</option>
+					<option value=" 30"> 30%</option>
+					<option value=" 35"> 35%</option>
+					<option value=" 40"> 40%</option>
+					<option value=" 50"> 50%</option>
 				</select>
 			</div>
 
@@ -96,9 +96,9 @@ export default function CreateForm() {
 					className="select select-primary select-bordered select-sm w-full max-w-xs"
 					{...register("Radiohead", { required: true })}
 				>
-					<option value="3">3</option>
-					<option value="5">5</option>
-					<option value="7">7</option>
+					<option value="3">3%</option>
+					<option value="5">5%</option>
+					<option value="7">7%</option>
 				</select>
 			</div>
 			<input

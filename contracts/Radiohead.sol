@@ -57,8 +57,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         uint _limitedSupply,
         uint _regularSongPrice,
         uint _limitedSongPrice,
-        string memory _regularSongURI,
-        string memory _limitedSongURI,
+        string memory _songURI,
         uint _platformRoyality,
         uint _superfanRoyality
     ) external returns (uint songId) {
@@ -66,7 +65,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         songIdCounter.increment();
         songId = songIdCounter.current();
         _mint(msg.sender, songId, 10 ** 18, "");
-        _setURI(songId, _regularSongURI);
+        _setURI(songId, _songURI);
         Song storage currentSong = songsArray.push();
         currentSong.artist = msg.sender;
         currentSong.songId = songId;
@@ -79,7 +78,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         songIdCounter.increment();
         uint ltdSongId = songIdCounter.current();
         _mint(msg.sender, ltdSongId, _limitedSupply, "");
-        _setURI(ltdSongId, _limitedSongURI);
+        _setURI(ltdSongId, _songURI);
 
         currentSong.ltdSongId = ltdSongId;
 

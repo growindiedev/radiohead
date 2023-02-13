@@ -1,27 +1,54 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { usePrepareContractWrite } from "wagmi";
+import { usePrepareContractWrite, useContractWrite } from "wagmi";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
+import { NFTStorage } from "nft.storage";
+import { useDebounce } from "use-debounce";
+import { config } from "dotenv";
 
 export default function CreateForm() {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		getValues,
 	} = useForm();
-	console.log(errors);
+
+	const createNFTData = async () => {
+		const client = new NFTStorage({
+			token: process.env.NFT_STORAGE!,
+		});
+
+		const nft = {
+			description: getValues("description"),
+			image: getValues("coverArt")[0],
+			name: getValues("songName"),
+			animation_url: getValues("audio")[0],
+		};
+
+		const metadata = await client.store(nft);
+		console.log("metadata saved", metadata);
+		return metadata;
+	};
+
+	const deBouncedInputData = useDebounce(getValues(), 1000);
+	//const deBouncedNFTmetadata = useDebounce(createNFTData(), 1000)
 
 	const { config } = usePrepareContractWrite({
-		address: "0x511Fb8f28695Cf27Efaa9a6CDD940dAE0b3899E3",
+		address: "0xA0D381c8Cd7B45474856AbC075b41F64881650Ac",
 		abi: radioheadABI,
 		functionName: "createSong",
+		args: [],
 	});
+
+	const { data, isLoading, isSuccess, write } = useContractWrite(config);
+	console.log("watch", deBouncedInputData[0].coverArt[0]);
 
 	return (
 		<form
 			className="grid sm:grid-cols-2 grid-cols-1 gap-4 min-w-2/3 min-h-2/3 place-items-center border p-16"
-			onSubmit={handleSubmit(() => alert("submitted"))}
+			onSubmit={handleSubmit((data) => console.log(data))}
 		>
 			<div className="form-control w-full max-w-xs">
 				<label className="label">
@@ -31,7 +58,7 @@ export default function CreateForm() {
 				<input
 					type="file"
 					className="file-input file-input-bordered file-input-sm w-full max-w-xs"
-					{...register("Audio", { required: true })}
+					{...register("audio", { required: true })}
 				/>
 			</div>
 			<div className="form-control w-full max-w-xs">
@@ -42,26 +69,26 @@ export default function CreateForm() {
 				<input
 					type="file"
 					className="file-input file-input-bordered file-input-sm w-full max-w-xs"
-					{...register("Cover Art", { required: true })}
+					{...register("coverArt", { required: true })}
 				/>
 			</div>
 			<input
 				type="text"
 				className="input input-bordered input-primary w-full max-w-xs"
-				placeholder="Name"
-				{...register("Name", { required: true })}
+				placeholder="Song Name"
+				{...register("songName", { required: true })}
 			/>
 			<input
 				type="text"
 				className="input input-bordered input-primary w-full max-w-xs"
 				placeholder="Description"
-				{...register("Description", { required: true })}
+				{...register("description", { required: true })}
 			/>
 			<input
 				type="number"
 				className="input input-bordered input-primary w-full max-w-xs"
 				placeholder="Limited Edition Supply"
-				{...register("Limited Edition Supply", {
+				{...register("limitedEditionSupply", {
 					required: true,
 					max: 1000,
 					min: 1,
@@ -71,7 +98,7 @@ export default function CreateForm() {
 				type="number"
 				className="input input-bordered input-primary w-full max-w-xs"
 				placeholder="Limited Edition Price"
-				{...register("Limited Edition Price", { required: true, max: 100 })}
+				{...register("limitedEditionPrice", { required: true, max: 100 })}
 			/>
 
 			<div className="form-control w-full max-w-xs">
@@ -81,7 +108,7 @@ export default function CreateForm() {
 				</label>
 				<select
 					className="select select-primary select-bordered select-sm w-full max-w-xs"
-					{...register("Superfans", { required: true })}
+					{...register("superfansRoyality", { required: true })}
 				>
 					<option value="5">5%</option>
 					<option value=" 10"> 10%</option>
@@ -102,7 +129,7 @@ export default function CreateForm() {
 				</label>
 				<select
 					className="select select-primary select-bordered select-sm w-full max-w-xs"
-					{...register("Radiohead", { required: true })}
+					{...register("platformRoyality", { required: true })}
 				>
 					<option value="3">3%</option>
 					<option value="5">5%</option>
@@ -113,7 +140,7 @@ export default function CreateForm() {
 				className="input input-bordered input-primary w-full max-w-xs"
 				type="number"
 				placeholder="Regular Edition Price"
-				{...register("Regular Edition Price", { required: true })}
+				{...register("regularEditionPrice", { required: true })}
 			/>
 
 			<input type="submit" className="btn w-full max-w-xs" />

@@ -22,15 +22,7 @@ const deployRadioheadFixture = async () => {
 
 	await radiohead
 		.connect(artist1)
-		.createSong(
-			15,
-			parseEther("1"),
-			parseEther("5"),
-			"regular1",
-			"limited1",
-			5,
-			20
-		);
+		.createSong(15, parseEther("1"), parseEther("5"), "uri", 5, 20);
 
 	return {
 		escrow,
@@ -64,27 +56,11 @@ const deployWithdrawFixture = async () => {
 
 	await radiohead
 		.connect(artist1)
-		.createSong(
-			6,
-			parseEther("2"),
-			parseEther("5"),
-			"regular1",
-			"limited1",
-			5,
-			20
-		);
+		.createSong(6, parseEther("2"), parseEther("5"), "uri", 5, 20);
 
 	await radiohead
 		.connect(artist1)
-		.createSong(
-			3,
-			parseEther("3"),
-			parseEther("7"),
-			"regular2",
-			"limited2",
-			4,
-			17
-		);
+		.createSong(3, parseEther("3"), parseEther("7"), "uri", 4, 17);
 
 	// await radiohead
 	// 	.connect(regularBuyer1)

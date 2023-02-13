@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { usePrepareContractWrite } from "wagmi";
+import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 
 export default function CreateForm() {
 	const {
@@ -9,6 +11,12 @@ export default function CreateForm() {
 		formState: { errors },
 	} = useForm();
 	console.log(errors);
+
+	const { config } = usePrepareContractWrite({
+		address: "0x511Fb8f28695Cf27Efaa9a6CDD940dAE0b3899E3",
+		abi: radioheadABI,
+		functionName: "createSong",
+	});
 
 	return (
 		<form

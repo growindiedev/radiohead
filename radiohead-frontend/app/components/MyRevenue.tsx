@@ -1,6 +1,6 @@
 const MyRevenue = () => {
 	return (
-		<div className="card bg-base-100 shadow-lg w-2/3 border">
+		<div className="card bg-base-100 shadow-lg w-2/3 border rounded-none">
 			<div className="card-body items-center text-center">
 				<h2 className="card-title">My Revenue Distribution 💸</h2>
 				<table className="table w-full">
@@ -28,7 +28,7 @@ const MyRevenue = () => {
 					</tbody>
 				</table>
 				<div className="card-actions">
-					<button className="btn btn-primary">Withdraw</button>
+					<button className="btn">Withdraw</button>
 				</div>
 			</div>
 		</div>

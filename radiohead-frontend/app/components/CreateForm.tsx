@@ -96,7 +96,7 @@ export default function CreateForm() {
 
 	return (
 		<>
-			<form className="grid sm:grid-cols-2 grid-cols-1 gap-4 min-w-2/3 min-h-2/3 place-items-center border p-16 ">
+			<form className="grid sm:grid-cols-2 grid-cols-1 gap-4 min-w-2/3 min-h-2/3 place-items-center  p-16 rounded-md shadow-2xl">
 				<div className="form-control w-full max-w-xs">
 					<label className="label">
 						<span className="label-text">Audio</span>

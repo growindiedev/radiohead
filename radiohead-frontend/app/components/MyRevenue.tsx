@@ -1,7 +1,7 @@
 const MyRevenue = () => {
 	return (
-		<div className="card bg-base-100 shadow-lg w-2/3 border rounded-none">
-			<div className="card-body items-center text-center">
+		<div className="card bg-base-100 shadow-2xl w-2/3 rounded-none">
+			<div className="card-body items-center text-center rounded-none">
 				<h2 className="card-title">My Revenue Distribution 💸</h2>
 				<table className="table w-full">
 					<tbody>

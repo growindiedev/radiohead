@@ -3,6 +3,7 @@ import ConnectButton from "./components/ConnectButton";
 import Link from "next/link";
 
 import "./globals.css";
+import AudioPlayer from "./components/AudioPlayer";
 
 export default function RootLayout({
 	children,
@@ -70,9 +71,10 @@ export default function RootLayout({
 						</div>
 					</div>
 					{/* <div className="h-[calc(100vh-4rem)] border-4 border-red-700 overflow-y-scroll"> */}
-					<div className="h-[calc(100vh-4rem)] overflow-y-scroll">
+					<div className="h-[calc(100vh-11rem)] overflow-y-scroll">
 						{children}
 					</div>
+					<AudioPlayer />
 				</WagmiContext>
 			</body>
 		</html>

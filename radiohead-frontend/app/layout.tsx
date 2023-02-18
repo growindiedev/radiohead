@@ -70,9 +70,93 @@ export default function RootLayout({
 							<ConnectButton />
 						</div>
 					</div>
-					{/* <div className="h-[calc(100vh-4rem)] border-4 border-red-700 overflow-y-scroll"> */}
-					<div className="h-[calc(100vh-11rem)] overflow-y-scroll">
-						{children}
+					<div className="drawer h-[calc(100vh-11rem)]">
+						<input id="my-drawer" type="checkbox" className="drawer-toggle" />
+						<div className="drawer-content">
+							<div className="h-[calc(100vh-11rem)] overflow-y-scroll">
+								{children}
+							</div>
+						</div>
+						<div className="drawer-side">
+							<label htmlFor="my-drawer" className="drawer-overlay"></label>
+							<ul className="menu p-4 w-80 bg-base-100 text-base-content">
+								<div className="white-player-playlist">
+									<div
+										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
+										data-amplitude-song-index="0"
+									>
+										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/we-are-to-answer.jpg" />
+
+										<div className="playlist-song-meta">
+											<span className="playlist-song-name">
+												Risin' High (feat Raashan Ahmad)
+											</span>
+											<span className="playlist-artist-album">
+												Ancient Astronauts &bull; We Are to Answer
+											</span>
+										</div>
+									</div>
+									<div
+										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
+										data-amplitude-song-index="1"
+									>
+										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/ask-the-dust.jpg" />
+
+										<div className="playlist-song-meta">
+											<span className="playlist-song-name">The Gun</span>
+											<span className="playlist-artist-album">
+												Lorn &bull; Ask The Dust
+											</span>
+										</div>
+									</div>
+									<div
+										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
+										data-amplitude-song-index="2"
+									>
+										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/anvil.jpg" />
+
+										<div className="playlist-song-meta">
+											<span className="playlist-song-name">The Gun</span>
+											<span className="playlist-artist-album">
+												Lorn &bull; Anvil
+											</span>
+										</div>
+									</div>
+									<div
+										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
+										data-amplitude-song-index="3"
+									>
+										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/we-are-to-answer.jpg" />
+
+										<div className="playlist-song-meta">
+											<span className="playlist-song-name">I Came Running</span>
+											<span className="playlist-artist-album">
+												Ancient Astronauts &bull; We Are to Answer
+											</span>
+										</div>
+									</div>
+									<div
+										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
+										data-amplitude-song-index="4"
+									>
+										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/soon-it-will-be-cold-enough.jpg" />
+
+										<div className="playlist-song-meta">
+											<span className="playlist-song-name">First Snow</span>
+											<span className="playlist-artist-album">
+												Emancipator &bull; Soon It Will Be Cold Enough
+											</span>
+										</div>
+									</div>
+								</div>
+								<li>
+									<a>Sidebar Item 1</a>
+								</li>
+								<li>
+									<a>Sidebar Item 2</a>
+								</li>
+							</ul>
+						</div>
 					</div>
 					<AudioPlayer />
 				</WagmiContext>

@@ -80,23 +80,24 @@ export default function RootLayout({
 						<div className="drawer-side">
 							<label htmlFor="my-drawer" className="drawer-overlay"></label>
 							<ul className="menu p-4 w-80 bg-base-100 text-base-content">
-								<div className="white-player-playlist">
+								<div className="white-player-playlist border border-indigo-500">
 									<div
-										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
+										className="flex items-center space-x-3 amplitude-song-container amplitude-play-pause w-full overflow-scroll"
 										data-amplitude-song-index="0"
 									>
-										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/we-are-to-answer.jpg" />
-
-										<div className="playlist-song-meta">
-											<span className="playlist-song-name">
-												Risin' High (feat Raashan Ahmad)
-											</span>
-											<span className="playlist-artist-album">
+										<div className="avatar">
+											<div className="mask mask-squircle w-14 h-14">
+												<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/we-are-to-answer.jpg" />
+											</div>
+										</div>
+										<div>
+											<div className="font-bold">Risin' High</div>
+											<marquee className="text-sm opacity-50 truncate">
 												Ancient Astronauts &bull; We Are to Answer
-											</span>
+											</marquee>
 										</div>
 									</div>
-									<div
+									{/* <div
 										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
 										data-amplitude-song-index="1"
 									>
@@ -147,7 +148,7 @@ export default function RootLayout({
 												Emancipator &bull; Soon It Will Be Cold Enough
 											</span>
 										</div>
-									</div>
+									</div> */}
 								</div>
 								<li>
 									<a>Sidebar Item 1</a>

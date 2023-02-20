@@ -92,63 +92,12 @@ export default function RootLayout({
 										</div>
 										<div>
 											<div className="font-bold">Risin' High</div>
-											<marquee className="text-sm opacity-50 truncate">
+											{/* <div className="text-sm opacity-50 animate-marquee whitespace-nowrap overflow-hidden absolute"> */}
+											<marquee>
 												Ancient Astronauts &bull; We Are to Answer
 											</marquee>
 										</div>
 									</div>
-									{/* <div
-										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
-										data-amplitude-song-index="1"
-									>
-										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/ask-the-dust.jpg" />
-
-										<div className="playlist-song-meta">
-											<span className="playlist-song-name">The Gun</span>
-											<span className="playlist-artist-album">
-												Lorn &bull; Ask The Dust
-											</span>
-										</div>
-									</div>
-									<div
-										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
-										data-amplitude-song-index="2"
-									>
-										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/anvil.jpg" />
-
-										<div className="playlist-song-meta">
-											<span className="playlist-song-name">The Gun</span>
-											<span className="playlist-artist-album">
-												Lorn &bull; Anvil
-											</span>
-										</div>
-									</div>
-									<div
-										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
-										data-amplitude-song-index="3"
-									>
-										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/we-are-to-answer.jpg" />
-
-										<div className="playlist-song-meta">
-											<span className="playlist-song-name">I Came Running</span>
-											<span className="playlist-artist-album">
-												Ancient Astronauts &bull; We Are to Answer
-											</span>
-										</div>
-									</div>
-									<div
-										className="white-player-playlist-song amplitude-song-container amplitude-play-pause"
-										data-amplitude-song-index="4"
-									>
-										<img src="https://521dimensions.com/img/open-source/amplitudejs/album-art/soon-it-will-be-cold-enough.jpg" />
-
-										<div className="playlist-song-meta">
-											<span className="playlist-song-name">First Snow</span>
-											<span className="playlist-artist-album">
-												Emancipator &bull; Soon It Will Be Cold Enough
-											</span>
-										</div>
-									</div> */}
 								</div>
 								<li>
 									<a>Sidebar Item 1</a>

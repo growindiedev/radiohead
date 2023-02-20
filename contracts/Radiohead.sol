@@ -29,7 +29,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         address[] superfans;
     }
 
-    mapping(address => uint[]) public songOwners;
+    mapping(address => uint[]) public ownedSongs;
     // A single song will have two songIds, one belongs to unlimited edition and anoter one belongs to limited ones
     Song[] public songsArray;
     mapping(uint => uint) public songIndex; //songId to songsArray Index
@@ -126,7 +126,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
             currentSong.artist,
             msg.sender
         );
-        songOwners[msg.sender].push(songId);
+        ownedSongs[msg.sender].push(songId);
         emit regularSongBought(songId, msg.sender);
     }
 
@@ -157,7 +157,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
             currentSong.artist,
             msg.sender
         );
-        songOwners[msg.sender].push(currentSong.ltdSongId);
+        ownedSongs[msg.sender].push(currentSong.ltdSongId);
         emit limitedSongBought(currentSong.ltdSongId, msg.sender);
     }
 
@@ -225,7 +225,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         current = songIdCounter.current();
     }
 
-    function getSong(uint id) public view returns (Song memory song) {
+    function getSong(uint id) external view returns (Song memory song) {
         if (id % 2 != 0) {
             require(exists(id), "the song doesn't exists");
             song = songsArray[songIndex[id]];
@@ -235,10 +235,14 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         }
     }
 
-    function getSongOwners(
+    function getSongs() external view returns (Song[] memory gaane) {
+        gaane = songsArray;
+    }
+
+    function getOwnedSongs(
         address party
     ) public view returns (uint[] memory songs) {
-        songs = songOwners[party];
+        songs = ownedSongs[party];
     }
 
     // The following functions are overrides required by Solidity.

@@ -17,7 +17,7 @@ const { chains, provider } = configureChains(
 	[
 		alchemyProvider({ apiKey: process.env.GOERLI_ALCHEMY_ID! }),
 		//alchemyProvider({ apiKey: process.env.MUMBAI_ALCHEMY_ID! }),
-		//publicProvider(),
+		publicProvider(),
 	]
 );
 

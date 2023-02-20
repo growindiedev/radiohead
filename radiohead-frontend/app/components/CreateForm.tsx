@@ -1,22 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { usePrepareContractWrite, useContractWrite } from "wagmi";
+import { usePrepareContractWrite, useContractWrite, useAccount } from "wagmi";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import { NFTStorage } from "nft.storage";
 import { useDebounce } from "use-debounce";
 import { parseEther } from "ethers/lib/utils.js";
 import { ErrorMessage } from "@hookform/error-message";
-
-type FormValues = {
-	limitedEditionSupply: string;
-	regularEditionPrice: string;
-	limitedEditionPrice: string;
-	platformRoyality: string;
-	superfansRoyality: string;
-	coverArt: File;
-	audio: File;
-};
 
 export default function CreateForm() {
 	const {
@@ -28,18 +18,23 @@ export default function CreateForm() {
 		reset,
 	} = useForm();
 
+	const { isConnected } = useAccount();
+
 	const [nftURI, setNftURI] = useState<string>("");
 	const [uploading, setUploading] = useState<boolean>(false);
 	const deBouncedInputData = useDebounce(getValues(), 200)[0];
 
 	const { config } = usePrepareContractWrite({
-		address: "0xA0D381c8Cd7B45474856AbC075b41F64881650Ac",
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3",
 		abi: radioheadABI,
 		functionName: "createSong",
+		enabled: isConnected,
 		args: [
 			deBouncedInputData.limitedEditionSupply,
-			deBouncedInputData.regularEditionPrice,
-			deBouncedInputData.limitedEditionPrice,
+			deBouncedInputData.regularEditionPrice &&
+				parseEther(deBouncedInputData.regularEditionPrice),
+			deBouncedInputData.limitedEditionPrice &&
+				parseEther(deBouncedInputData.limitedEditionPrice),
 			nftURI,
 			deBouncedInputData.platformRoyality,
 			deBouncedInputData.superfansRoyality,
@@ -211,14 +206,14 @@ export default function CreateForm() {
 						{...register("superfansRoyality", { required: true })}
 					>
 						<option value="5">5%</option>
-						<option value=" 10"> 10%</option>
-						<option value=" 15"> 15%</option>
-						<option value=" 20"> 20%</option>
-						<option value=" 25"> 25%</option>
-						<option value=" 30"> 30%</option>
-						<option value=" 35"> 35%</option>
-						<option value=" 40"> 40%</option>
-						<option value=" 50"> 50%</option>
+						<option value="10">10%</option>
+						<option value="15">15%</option>
+						<option value="20">20%</option>
+						<option value="25">25%</option>
+						<option value="30">30%</option>
+						<option value="35">35%</option>
+						<option value="40">40%</option>
+						<option value="50">50%</option>
 					</select>
 				</div>
 

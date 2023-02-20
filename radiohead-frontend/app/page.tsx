@@ -1,14 +1,15 @@
 "use client";
 import { useAccount, useContractRead, useContract, useProvider } from "wagmi";
 import { abi as radioheadABI } from "../../artifacts/contracts/Radiohead.sol/Radiohead.json";
-import { useState } from "react";
+import { useContext } from "react";
 import { formatEther } from "ethers/lib/utils.js";
 import { Song, metadata, finalSong } from "@/types";
+import { StateContext } from "./StateProvider";
+
 import axios from "axios";
 
 const Home = () => {
 	const { isConnected } = useAccount();
-	const [songs, setSongs] = useState<finalSong[]>();
 	const provider = useProvider();
 	const contract = useContract({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
@@ -16,13 +17,8 @@ const Home = () => {
 		signerOrProvider: provider,
 	});
 
-	const {
-		data: songContractData,
-		isError,
-		isLoading,
-		refetch,
-		isSuccess,
-	} = useContractRead({
+	const { songs, setSongs } = useContext(StateContext);
+	const { data, isError, isLoading } = useContractRead({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
 		abi: radioheadABI,
 		functionName: "getSongs",
@@ -67,7 +63,7 @@ const Home = () => {
 
 	// <div className="grid gap-6 grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] m-6 pt-20">
 
-	if (!songs) return <div>Fetching transaction…</div>;
+	if (!songs || isLoading) return <div>Fetching transaction…</div>;
 	if (isError) return <div>Error fetching transaction</div>;
 	return (
 		<div className="p-4">

@@ -109,44 +109,12 @@ const AudioPlayer = () => {
 					if (isNaN(percentage)) {
 						percentage = 0;
 					}
-
 					slider.current.style.backgroundSize = percentage + "% 100%";
 				},
 			},
 			songs: playlist,
 		});
 	}, []);
-
-	/*
-  Shows the playlist
-*/
-	// 	document
-	// 		.getElementsByclassNameName("show-playlist")[0]
-	// 		.addEventListener("click", function () {
-	// 			document
-	// 				.getElementById("white-player-playlist-container")
-	// 				.classNameList.remove("slide-out-top");
-	// 			document
-	// 				.getElementById("white-player-playlist-container")
-	// 				.classNameList.add("slide-in-top");
-	// 			document.getElementById("white-player-playlist-container").style.display =
-	// 				"block";
-	// 		});
-
-	// 	/*
-	//   Hides the playlist
-	// */
-	// 	document
-	// 		.getElementsByclassNameName("close-playlist")[0]
-	// 		.addEventListener("click", function () {
-	// 			document.getElementById("white-player-playlist-container")
-	// 				.classNameList.remove("slide-in-top");
-	// 			document
-	// 				.getElementById("white-player-playlist-container")
-	// 				.classNameList.add("slide-out-top");
-	// 			document.getElementById("white-player-playlist-container").style.display =
-	// 				"none";
-	// 		});
 
 	return (
 		<div className="relative w-player grid grid-cols-3 grid-rows-2 rounded shadow-player-light bg-player-light-background border border-player-light-border w-full max-h-1/10">

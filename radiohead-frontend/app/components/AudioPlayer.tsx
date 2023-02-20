@@ -127,15 +127,15 @@ const AudioPlayer = () => {
 				<div className="flex flex-col">
 					<span
 						data-amplitude-song-info="name"
-						className="font-sans text-sm font-medium leading-7 text-slate-900"
+						className="font-sans text-xs font-medium leading-6 text-slate-900"
 					></span>
 					<span
 						data-amplitude-song-info="artist"
-						className="font-sans text-sm font-medium leading-6 text-gray-500"
+						className="font-sans text-xs font-medium leading-5 text-gray-500"
 					></span>
 					<span
 						data-amplitude-song-info="album"
-						className="font-sans text-sm font-medium leading-6 text-gray-500"
+						className="font-sans text-xs font-medium leading-5 text-gray-500"
 					></span>
 				</div>
 			</div>

@@ -5,8 +5,8 @@ import { useContext } from "react";
 import { formatEther } from "ethers/lib/utils.js";
 import { Song, metadata, finalSong } from "@/types";
 import { StateContext } from "./StateProvider";
-
 import axios from "axios";
+import SongCard from "./components/SongCard";
 
 const Home = () => {
 	const { isConnected } = useAccount();
@@ -61,16 +61,12 @@ const Home = () => {
 
 	console.log("dem", songs);
 
-	// <div className="grid gap-6 grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] m-6 pt-20">
-
 	if (!songs || isLoading) return <div>Fetching transaction…</div>;
 	if (isError) return <div>Error fetching transaction</div>;
 	return (
-		<div className="p-4">
+		<div className="grid gap-6 grid-cols-[repeat(auto-fill,_minmax(220px,_1fr))] my-6 md:mx-48 sm:mx-6">
 			{songs.map((song, i) => (
-				<div key={i} className="p-4 border bottom-2 m-4">
-					{JSON.stringify(song)}
-				</div>
+				<SongCard key={i} {...song} />
 			))}
 		</div>
 	);

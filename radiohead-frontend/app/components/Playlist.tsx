@@ -4,7 +4,7 @@ import { StateContext } from "../StateProvider";
 import PlaylistSong from "./PlaylistSong";
 
 const Playlist = ({ children }: { children: React.ReactNode }) => {
-	const { songs, setSongs } = useContext(StateContext);
+	const { ownedSongs } = useContext(StateContext);
 
 	return (
 		<div className="drawer h-[calc(100vh-11rem)]">
@@ -16,8 +16,9 @@ const Playlist = ({ children }: { children: React.ReactNode }) => {
 			</div>
 			<div className="drawer-side">
 				<label htmlFor="my-drawer" className="drawer-overlay"></label>
-				<ul className="menu p-4 w-80 bg-base-100 text-base-content white-player-playlist">
-					<PlaylistSong />
+				<ul className="menu p-4 w-96 bg-base-100 text-base-content white-player-playlist">
+					{ownedSongs.length > 0 &&
+						ownedSongs.map((song, i) => <PlaylistSong key={i} {...song} />)}
 				</ul>
 			</div>
 		</div>

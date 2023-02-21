@@ -8,4 +8,4 @@ const ConnectWallet = () => (
 	</>
 );
 
-export default ConnectButton;
+export default ConnectWallet;

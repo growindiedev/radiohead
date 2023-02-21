@@ -29,6 +29,13 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         address[] superfans;
     }
 
+    struct OwnedSongs {
+        uint songId;
+        uint regularAmt;
+        uint ltdSongId;
+        uint ltdAmt;
+    }
+
     mapping(address => uint[]) public ownedSongs;
     // A single song will have two songIds, one belongs to unlimited edition and anoter one belongs to limited ones
     Song[] public songsArray;
@@ -239,10 +246,29 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         gaane = songsArray;
     }
 
+    // function getOwnedSongs(
+    //     address party
+    // ) public view returns (uint[] memory songs) {
+    //     songs = ownedSongs[party];
+    // }
+
     function getOwnedSongs(
-        address party
-    ) public view returns (uint[] memory songs) {
-        songs = ownedSongs[party];
+        address sender
+    ) external view returns (OwnedSongs[] memory) {
+        OwnedSongs[] memory ownedSongsArray;
+        for (uint i = 0; i < songsArray.length; i++) {
+            uint regularBalance = balanceOf(sender, songsArray[i].songId);
+            uint ltdBalance = balanceOf(sender, songsArray[i].ltdSongId);
+            if (regularBalance > 0 || ltdBalance > 0) {
+                ownedSongsArray[i] = OwnedSongs({
+                    songId: songsArray[i].songId,
+                    regularAmt: regularBalance,
+                    ltdSongId: songsArray[i].ltdSongId,
+                    ltdAmt: ltdBalance
+                });
+            }
+        }
+        return ownedSongsArray;
     }
 
     // The following functions are overrides required by Solidity.

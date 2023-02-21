@@ -3,7 +3,7 @@ import WagmiContext from "./components/WagmiContext";
 import ConnectButton from "./components/ConnectButton";
 import AudioPlayer from "./components/AudioPlayer";
 import Navbar from "./components/Navbar";
-import Drawer from "./components/Drawer";
+import Playlist from "./components/Playlist";
 import "./globals.css";
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
 						<Navbar>
 							<ConnectButton />
 						</Navbar>
-						<Drawer>{children}</Drawer>
+						<Playlist>{children}</Playlist>
 						<AudioPlayer />
 					</StateProvider>
 				</WagmiContext>

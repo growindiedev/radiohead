@@ -4,6 +4,7 @@ import { useAccount, useContractRead, useContract, useProvider } from "wagmi";
 import { abi as radioheadABI } from "../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import { formatEther } from "ethers/lib/utils.js";
 import { Song, metadata, finalSong, songsOwnedByUser } from "@/types";
+import { demoSongs } from "./demosongs";
 import axios from "axios";
 
 export type contextType = {
@@ -22,7 +23,29 @@ export function StateProvider({
 	children: React.ReactNode;
 }): JSX.Element {
 	const [songs, setSongs] = useState<finalSong[]>([]);
-	const [ownedSongs, setOwnedSongs] = useState<songsOwnedByUser[]>([]);
+	const [ownedSongs, setOwnedSongs] = useState<songsOwnedByUser[]>(
+		demoSongs.map((song) => ({
+			image: song.cover_art_url,
+			animation_url: song.url,
+			description: "Free songs for radiohead users",
+			name: song.name,
+			attributes: [
+				{
+					trait_type: "artist",
+					value: song.artist,
+				},
+			],
+			artist: "radiohead",
+			regularPrice: "0",
+			limitedPrice: "0",
+			limitedSongMinted: 0,
+			limitedSupply: 0,
+			ltdSongId: 0,
+			songId: 0,
+			regularSongBalance: 0,
+			ltdSongBalance: 0,
+		}))
+	);
 
 	const provider = useProvider();
 	const contract = useContract({
@@ -61,7 +84,7 @@ export function StateProvider({
 					address as `0x${string}`,
 					songs
 				);
-				setOwnedSongs(songsOwnedCurrently);
+				setOwnedSongs((prev) => [...prev, ...songsOwnedCurrently]);
 			}
 		},
 	});
@@ -107,7 +130,7 @@ export function StateProvider({
 					address,
 					contractData
 				);
-				setOwnedSongs(songsOwnedCurrently);
+				setOwnedSongs((prev) => [...prev, ...songsOwnedCurrently]);
 			}
 		},
 	});

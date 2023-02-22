@@ -9,7 +9,8 @@ const PlaylistSong = ({
 	attributes,
 	ltdSongBalance,
 	regularSongBalance,
-}: songsOwnedByUser) => {
+	index,
+}: songsOwnedByUser & { index: number }) => {
 	const formatNumber = (num: number): string => {
 		return new Intl.NumberFormat("en-GB", {
 			notation: "compact",
@@ -19,10 +20,11 @@ const PlaylistSong = ({
 
 	return (
 		<div
-			className="flex items-center space-x-3 amplitude-song-container amplitude-play-pause w-full overflow-scroll glass shadow-xl p-2 my-1"
-			onClick={() => Amplitude.playSongAtIndex(songId)}
+			className="flex items-center space-x-3 song amplitude-song-container w-full overflow-scroll glass shadow-xl p-2 my-1"
+			onClick={() => Amplitude.playSongAtIndex(index)}
+			//amplitude-song-index={index}
 		>
-			<div className="avatar">
+			<div className="avatar amplitude-play-pause">
 				<div className="mask mask-squircle w-16 h-16">
 					<img src={image} />
 				</div>

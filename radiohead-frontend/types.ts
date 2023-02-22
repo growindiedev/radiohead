@@ -41,7 +41,7 @@ export type finalSong = {
 	songId: number;
 };
 
-export type songOwnedByUser = {
+export type songsOwnedByUser = {
 	image: string;
 	animation_url: string;
 	description: string;

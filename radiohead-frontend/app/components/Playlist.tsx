@@ -18,7 +18,10 @@ const Playlist = ({ children }: { children: React.ReactNode }) => {
 				<label htmlFor="my-drawer" className="drawer-overlay"></label>
 				<ul className="menu p-4 w-96 bg-base-100 text-base-content white-player-playlist">
 					{ownedSongs.length > 0 &&
-						ownedSongs.map((song, i) => <PlaylistSong key={i} {...song} />)}
+						ownedSongs.map((song) => (
+							<PlaylistSong key={song.songId} {...song} />
+						))}
+					{/* <PlaylistSong /> */}
 				</ul>
 			</div>
 		</div>

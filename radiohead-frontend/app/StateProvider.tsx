@@ -3,12 +3,12 @@ import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { useAccount, useContractRead, useContract, useProvider } from "wagmi";
 import { abi as radioheadABI } from "../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import { formatEther } from "ethers/lib/utils.js";
-import { Song, metadata, finalSong, songOwnedByUser } from "@/types";
+import { Song, metadata, finalSong, songsOwnedByUser } from "@/types";
 import axios from "axios";
 
 export type contextType = {
 	songs: finalSong[];
-	ownedSongs: songOwnedByUser[];
+	ownedSongs: songsOwnedByUser[];
 	setSongs: Dispatch<SetStateAction<any>>;
 	isLoading: boolean;
 	isError: boolean;
@@ -22,14 +22,48 @@ export function StateProvider({
 	children: React.ReactNode;
 }): JSX.Element {
 	const [songs, setSongs] = useState<finalSong[]>([]);
-	const [ownedSongs, setOwnedSongs] = useState<songOwnedByUser[]>([]);
+	const [ownedSongs, setOwnedSongs] = useState<songsOwnedByUser[]>([]);
 
-	const { address } = useAccount();
 	const provider = useProvider();
 	const contract = useContract({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
 		abi: radioheadABI,
 		signerOrProvider: provider,
+	});
+
+	const retrieveOwnedSongs = async (
+		address: string,
+		contractData: finalSong[]
+	): Promise<songsOwnedByUser[]> => {
+		const playListSongs = await Promise.all(
+			contractData.map(async (song) => {
+				const regularBalance = await contract?.balanceOf(address, song.songId);
+				const ltdBalance = await contract?.balanceOf(address, song.ltdSongId);
+				const obj = {
+					...song,
+					regularSongBalance: parseInt(String(regularBalance)),
+					ltdSongBalance: parseInt(String(ltdBalance)),
+				};
+				return obj;
+			})
+		);
+
+		const songsOwnedCurrently = playListSongs.filter(
+			(song) => song.regularSongBalance > 0 || song.ltdSongBalance > 0
+		);
+		return songsOwnedCurrently;
+	};
+
+	const { address } = useAccount({
+		onConnect: async ({ address }) => {
+			if (songs && contract) {
+				const songsOwnedCurrently = await retrieveOwnedSongs(
+					address as `0x${string}`,
+					songs
+				);
+				setOwnedSongs(songsOwnedCurrently);
+			}
+		},
 	});
 
 	const { isError, isLoading } = useContractRead({
@@ -68,28 +102,10 @@ export function StateProvider({
 				})
 			);
 			setSongs(contractData);
-			if (address && contractData) {
-				const playListSongs = await Promise.all(
-					contractData.map(async (song) => {
-						const regularBalance = await contract?.balanceOf(
-							address,
-							song.songId
-						);
-						const ltdBalance = await contract?.balanceOf(
-							address,
-							song.ltdSongId
-						);
-						const obj = {
-							...song,
-							regularSongBalance: parseInt(String(regularBalance)),
-							ltdSongBalance: parseInt(String(ltdBalance)),
-						};
-						return obj;
-					})
-				);
-
-				const songsOwnedCurrently = playListSongs.filter(
-					(song) => song.regularSongBalance > 0 || song.ltdSongBalance > 0
+			if (address && contractData && contract) {
+				const songsOwnedCurrently = await retrieveOwnedSongs(
+					address,
+					contractData
 				);
 				setOwnedSongs(songsOwnedCurrently);
 			}

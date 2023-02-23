@@ -231,7 +231,6 @@ const AudioPlayer = () => {
 					<span className="amplitude-duration-time text-xs font-sans tracking-wide font-medium text-gray-500"></span>
 				</div>
 			</div>
-			{/* <div className="hidden top-14 w-full absolute ml-auto mr-auto left-0 right-0 text-center max-w-lg h-72 rounded-full bg-highlight blur-2xl"></div> */}
 		</div>
 	);
 };

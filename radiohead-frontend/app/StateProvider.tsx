@@ -9,12 +9,12 @@ import {
 } from "wagmi";
 import { abi as radioheadABI } from "../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import { formatEther } from "ethers/lib/utils.js";
-import { Song, metadata, finalSong, songsOwnedByUser } from "@/types";
+import { Song, metadata, songWithMetadata, songsOwnedByUser } from "@/types";
 import { demoSongs } from "./demosongs";
 import axios from "axios";
 
 export type contextType = {
-	songs: finalSong[];
+	songs: songWithMetadata[];
 	ownedSongs: songsOwnedByUser[];
 	setSongs: Dispatch<SetStateAction<any>>;
 	isLoading: boolean;
@@ -50,7 +50,7 @@ export function StateProvider({
 		ltdSongBalance: 0,
 	}));
 
-	const [songs, setSongs] = useState<finalSong[]>([]);
+	const [songs, setSongs] = useState<songWithMetadata[]>([]);
 	const [ownedSongs, setOwnedSongs] = useState<songsOwnedByUser[]>(demo);
 
 	const provider = useProvider();
@@ -62,7 +62,7 @@ export function StateProvider({
 
 	const retrieveOwnedSongs = async (
 		address: string,
-		contractData: finalSong[]
+		contractData: songWithMetadata[]
 	): Promise<songsOwnedByUser[]> => {
 		const playListSongs = await Promise.all(
 			contractData.map(async (song) => {
@@ -83,7 +83,9 @@ export function StateProvider({
 		return songsOwnedCurrently;
 	};
 
-	const retrieveAllSongs = async (data: Song[]): Promise<finalSong[]> => {
+	const retrieveAllSongs = async (
+		data: Song[]
+	): Promise<songWithMetadata[]> => {
 		const allSongs = await Promise.all(
 			data.map(async (item) => {
 				const obj = {

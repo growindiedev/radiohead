@@ -2,7 +2,7 @@
 // call buyRegularSong() buyLtdSong() using useContractWrite
 //also ppass in destruct the metadat in the parent and pass imgage, music URL, artist, description
 //pass in other details lik
-import { finalSong } from "@/types";
+import { songWithMetadata } from "@/types";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 
@@ -18,7 +18,7 @@ const SongCard = ({
 	limitedSupply,
 	limitedSongMinted,
 	name,
-}: finalSong) => {
+}: songWithMetadata) => {
 	const { isConnected } = useAccount();
 
 	const { config: regularConfig } = usePrepareContractWrite({

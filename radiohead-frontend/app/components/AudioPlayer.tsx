@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useContext } from "react";
 import Amplitude from "amplitudejs";
 import { StateContext } from "../StateProvider";
+import Image from "next/image";
 
 const AudioPlayer = () => {
 	const slider = useRef(null);
@@ -38,8 +39,8 @@ const AudioPlayer = () => {
 	}, [ownedSongs]);
 
 	return (
-		<div className="relative w-player grid grid-cols-3 grid-rows-2 rounded shadow-player-light bg-player-light-background border border-player-light-border w-full max-h-1/10">
-			<div className="px-10 py-4 flex items-center z-50 row-span-2">
+		<div className="fixed grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-2 rounded shadow-player-light bg-player-light-background border border-player-light-border w-full bottom-0">
+			<div className="px-10 py-4 flex items-center z-50 sm:row-span-2">
 				<img
 					data-amplitude-song-info="cover_art_url"
 					className="w-20 h-20 rounded-md mr-6 border border-bg-player-light-background"
@@ -60,7 +61,7 @@ const AudioPlayer = () => {
 					></span>
 				</div>
 			</div>
-			<div className="h-control-panel px-30 rounded-b-xl bg-control-panel-light-background border-gray-200 flex items-center justify-center gap-6 z-50 row-start-2 col-start-2">
+			<div className="h-control-panel mx-30 rounded-b-xl bg-control-panel-light-background border-gray-200 flex items-center justify-center gap-6 z-50 sm:row-start-2 sm:col-start-2">
 				<div className="cursor-pointer" id="song-saved">
 					<svg
 						width="20"
@@ -218,7 +219,7 @@ const AudioPlayer = () => {
 					</label>
 				</div>
 			</div>
-			<div className="w-full flex flex-col pt-6 z-50">
+			<div className="sm:w-full w-4/5 flex flex-col sm:pt-6 z-50 justify-self-center m-4 sm:m-0">
 				<input
 					ref={slider}
 					type="range"

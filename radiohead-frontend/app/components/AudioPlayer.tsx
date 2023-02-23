@@ -33,6 +33,8 @@ const AudioPlayer = () => {
 				cover_art_url: song.image,
 			})),
 		});
+
+		Amplitude.bindNewElements();
 	}, [ownedSongs]);
 
 	return (

@@ -1,9 +1,9 @@
 const MyRevenue = () => {
 	return (
-		<div className="card bg-base-100 shadow-2xl w-2/3 rounded-none">
-			<div className="card-body items-center text-center rounded-none">
-				<h2 className="card-title">My Revenue Distribution 💸</h2>
-				<table className="table w-full">
+		<div className="card bg-base-200 shadow-2xl min-w-1/2  rounded-none">
+			<div className="card-body items-center text-center">
+				<h2 className="card-title mb-2">My Revenue Distribution 💸</h2>
+				<table className="table w-full bg-base-200 rounded-none">
 					<tbody>
 						<tr className="hover">
 							<td>NFTs launched</td>
@@ -28,7 +28,7 @@ const MyRevenue = () => {
 					</tbody>
 				</table>
 				<div className="card-actions">
-					<button className="btn">Withdraw</button>
+					<button className="btn m-2">Withdraw</button>
 				</div>
 			</div>
 		</div>

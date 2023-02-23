@@ -1,18 +1,15 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StateContext } from "../StateProvider";
 import PlaylistSong from "./PlaylistSong";
 
 const Playlist = ({ children }: { children: React.ReactNode }) => {
 	const { ownedSongs } = useContext(StateContext);
-
 	return (
-		<div className="drawer h-[calc(100vh-11rem)]">
+		<div className="drawer max-h-[calc(100vh-16.6rem)] sm:max-h-[calc(100vh-11.6rem)]">
 			<input id="my-drawer" type="checkbox" className="drawer-toggle" />
-			<div className="drawer-content">
-				<div className="h-[calc(100vh-11rem)] overflow-y-scroll">
-					{children}
-				</div>
+			<div className="drawer-content max-h-[calc(100vh-16.6rem)] sm:max-h-[calc(100vh-11.6rem)]">
+				{children}
 			</div>
 			<div className="drawer-side">
 				<label htmlFor="my-drawer" className="drawer-overlay"></label>

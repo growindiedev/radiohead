@@ -28,6 +28,7 @@ export function StateProvider({
 }: {
 	children: React.ReactNode;
 }): JSX.Element {
+	//hardcoded initial songs on frontend for all users
 	const demo: songsOwnedByUser[] = demoSongs.map((song) => ({
 		image: song.cover_art_url,
 		animation_url: song.url,
@@ -124,7 +125,7 @@ export function StateProvider({
 					address as `0x${string}`,
 					songs
 				);
-				setOwnedSongs((prev) => [...prev, ...songsOwnedCurrently]);
+				setOwnedSongs([...demo, ...songsOwnedCurrently]);
 			}
 		},
 
@@ -133,7 +134,11 @@ export function StateProvider({
 		},
 	});
 
-	const { isError, isLoading } = useContractRead({
+	const {
+		isError,
+		isLoading,
+		refetch: refetchAllSongs,
+	} = useContractRead({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
 		abi: radioheadABI,
 		functionName: "getSongs",
@@ -146,9 +151,45 @@ export function StateProvider({
 					address,
 					contractData
 				);
-				setOwnedSongs((prev) => [...prev, ...songsOwnedCurrently]);
+				setOwnedSongs([...demo, ...songsOwnedCurrently]);
 			}
 		},
+	});
+
+	useContractEvent({
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		abi: radioheadABI,
+		eventName: "regularSongBought",
+		listener(id, buyer) {
+			console.log("regularSongBought", id, buyer);
+			alert("regularSongBoughtt");
+			refetchAllSongs();
+		},
+		once: true,
+	});
+
+	useContractEvent({
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		abi: radioheadABI,
+		eventName: "limitedSongBought",
+		listener(id, buyer) {
+			console.log("limitedSongBought", id, buyer);
+			alert("limitedSongBought");
+			refetchAllSongs();
+		},
+		once: true,
+	});
+
+	useContractEvent({
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		abi: radioheadABI,
+		eventName: "songCreated",
+		listener(songId, ltdSongId) {
+			console.log("songCreated", songId, ltdSongId);
+			alert("songCreated");
+			refetchAllSongs();
+		},
+		once: true,
 	});
 
 	return (

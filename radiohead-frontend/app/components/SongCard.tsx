@@ -5,6 +5,8 @@
 import { songWithMetadata } from "@/types";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import React from "react";
 import { parseEther } from "ethers/lib/utils.js";
@@ -42,10 +44,28 @@ const SongCard = ({
 	} = useContractWrite({
 		...regularConfig,
 		onSuccess(data) {
-			console.log("Success regular", data);
+			toast.success(`Successfully submitted the request. Please wait `, {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 		},
 		onError(error) {
-			alert(error);
+			toast.error(String(error), {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 		},
 	});
 
@@ -69,10 +89,28 @@ const SongCard = ({
 	} = useContractWrite({
 		...limitedConfig,
 		onSuccess(data) {
-			console.log("Success limited", data);
+			toast.success(`Successfully submitted the request. Please wait `, {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 		},
 		onError(error) {
-			alert(error);
+			toast.error(String(error), {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 		},
 	});
 
@@ -104,8 +142,8 @@ const SongCard = ({
 								onClick={() => mintRegular?.()}
 							>
 								{isLoadingRegular || isErrorRegular || !mintRegular
-									? "⌛️ Processing..."
-									: "🛒 Regular"}
+									? "⌛️ .."
+									: "Buy Regular"}
 							</button>
 							{limitedSupply !== limitedSongMinted && (
 								<button
@@ -114,8 +152,8 @@ const SongCard = ({
 									onClick={() => mintLimited?.()}
 								>
 									{isLoadingLimited || isErrorLimited || !mintLimited
-										? "⌛️ Processing..."
-										: "🛒 Limited"}
+										? "⌛️ .."
+										: "Buy Limited"}
 								</button>
 							)}
 						</>

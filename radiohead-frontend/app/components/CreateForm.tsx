@@ -7,6 +7,7 @@ import { NFTStorage } from "nft.storage";
 import { useDebounce } from "use-debounce";
 import { parseEther } from "ethers/lib/utils.js";
 import { ErrorMessage } from "@hookform/error-message";
+import { toast } from "react-toastify";
 
 export default function CreateForm() {
 	const {
@@ -28,7 +29,7 @@ export default function CreateForm() {
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3",
 		abi: radioheadABI,
 		functionName: "createSong",
-		enabled: isConnected,
+		enabled: isConnected && Boolean(nftURI),
 		args: [
 			deBouncedInputData.limitedEditionSupply,
 			deBouncedInputData.regularEditionPrice &&
@@ -53,13 +54,37 @@ export default function CreateForm() {
 		onSuccess(data) {
 			reset();
 			setNftURI("");
-			console.log("Success", data);
+			toast.success(
+				`Successfully submitted the song creation request. Please wait`,
+				{
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+				}
+			);
+		},
+		onError(error) {
+			toast.error(String(error), {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 		},
 	});
 
 	const createMetaData = (e: any) => {
 		e.preventDefault();
-		handleSubmit(async () => {
+		const handleNFTStorage = async () => {
 			try {
 				const client = new NFTStorage({
 					token:
@@ -81,17 +106,43 @@ export default function CreateForm() {
 				const metadata = await client.store(nft);
 				setNftURI(metadata.url);
 				setUploading(false);
-				console.log("metdata", metadata.url);
-			} catch (err) {
-				console.log("errrrMeta", err);
+				metadata.url &&
+					toast.success(
+						`Metadata creation successful: ${metadata.url.replace(
+							"ipfs://",
+							"https://ipfs.io/ipfs/"
+						)}`,
+						{
+							position: "top-center",
+							autoClose: 5000,
+							hideProgressBar: false,
+							closeOnClick: true,
+							pauseOnHover: true,
+							draggable: true,
+							progress: undefined,
+							theme: "colored",
+						}
+					);
+			} catch (error) {
 				setUploading(false);
+				toast.error(String(error), {
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+				});
 			}
-		})();
+		};
+		handleSubmit(handleNFTStorage)();
 	};
 
 	return (
 		<>
-			<form className="bg-base-200 grid sm:grid-cols-2 grid-cols-1 gap-4 min-w-2/3 min-h-2/3 place-items-center p-16 rounded-md shadow-2xl">
+			<form className="bg-base-200 grid sm:grid-cols-2 grid-cols-1 gap-x-6 gap-y-3 gap min-w-2/3 min-h-2/3 place-items-center p-16 rounded-md shadow-2xl">
 				<div className="form-control w-full max-w-xs">
 					<label className="label">
 						<span className="label-text">Audio</span>
@@ -147,16 +198,13 @@ export default function CreateForm() {
 						<span className="label-text">Limited Edition Supply</span>
 					</label>
 					<input
+						type="number"
 						className="input input-bordered input-sm w-full max-w-xs"
 						placeholder="Limited Edition Supply"
 						{...register("limitedEditionSupply", {
 							required: true,
 							max: 1000,
 							min: 1,
-							pattern: {
-								value: /^\d+(\.\d{1,2})?$/,
-								message: "only numeric values are allowed",
-							},
 						})}
 					/>
 					<ErrorMessage
@@ -180,7 +228,7 @@ export default function CreateForm() {
 							required: true,
 							max: 100,
 							pattern: {
-								value: /^\d+(\.\d{1,2})?$/,
+								value: /^(0|[1-9]\d*)(\.\d+)?$/,
 								message: "only numeric values are allowed",
 							},
 						})}
@@ -241,7 +289,7 @@ export default function CreateForm() {
 						{...register("regularEditionPrice", {
 							required: true,
 							pattern: {
-								value: /^\d+(\.\d{1,2})?$/,
+								value: /^(0|[1-9]\d*)(\.\d+)?$/,
 								message: "only numeric values are allowed",
 							},
 						})}
@@ -269,15 +317,15 @@ export default function CreateForm() {
 				</div>
 				<button
 					disabled={Boolean(nftURI) || uploading}
-					className="btn w-full max-w-xs"
+					className="btn w-full max-w-xs mt-2"
 					onClick={createMetaData}
 				>
 					{uploading ? `⌛️ Uploading..` : `Upload to IPFS`}
 				</button>
 				<button
-					type="submit"
+					//type="submit"
 					disabled={!write || !Boolean(nftURI) || isMinting}
-					className="btn w-full max-w-xs"
+					className="btn w-full max-w-xs mt-2"
 					onClick={handleSubmit(() => {
 						write?.();
 						console.log(getValues());

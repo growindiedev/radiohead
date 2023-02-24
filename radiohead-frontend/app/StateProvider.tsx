@@ -12,6 +12,7 @@ import { formatEther } from "ethers/lib/utils.js";
 import { Song, metadata, songWithMetadata, songsOwnedByUser } from "@/types";
 import { demoSongs } from "./demosongs";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export type contextType = {
 	songs: songWithMetadata[];
@@ -160,9 +161,17 @@ export function StateProvider({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
 		abi: radioheadABI,
 		eventName: "regularSongBought",
-		listener(id, buyer) {
-			console.log("regularSongBought", id, buyer);
-			alert("regularSongBoughtt");
+		listener(id) {
+			toast.success(`Successfully minted the regular song of id ${id} `, {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 			refetchAllSongs();
 		},
 		once: true,
@@ -172,9 +181,17 @@ export function StateProvider({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
 		abi: radioheadABI,
 		eventName: "limitedSongBought",
-		listener(id, buyer) {
-			console.log("limitedSongBought", id, buyer);
-			alert("limitedSongBought");
+		listener(id) {
+			toast.success(`Successfully minted the limited song of id ${id} `, {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 			refetchAllSongs();
 		},
 		once: true,
@@ -185,8 +202,19 @@ export function StateProvider({
 		abi: radioheadABI,
 		eventName: "songCreated",
 		listener(songId, ltdSongId) {
-			console.log("songCreated", songId, ltdSongId);
-			alert("songCreated");
+			toast.success(
+				`Successfully created your song with songId: ${songId} and ltdSongId: ${ltdSongId}`,
+				{
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+				}
+			);
 			refetchAllSongs();
 		},
 		once: true,

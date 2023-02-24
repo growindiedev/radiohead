@@ -21,7 +21,7 @@ export type metadata = {
 	animation_url: string;
 };
 
-export type finalSong = {
+export type songWithMetadata = {
 	image: string;
 	animation_url: string;
 	description: string;

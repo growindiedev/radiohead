@@ -286,7 +286,7 @@ export default function CreateForm() {
 					{isMinting ? "creating..." : "create song"}
 				</button>
 			</form>
-			{isSuccess && (
+			{/* {isSuccess && (
 				<div>
 					Successfully minted your NFT!
 					<div>
@@ -299,7 +299,7 @@ export default function CreateForm() {
 					</div>
 				</div>
 			)}
-			{isError && <div>Error: {error?.message}</div>}
+			{isError && <div>Error: {error?.message}</div>} */}
 		</>
 	);
 }

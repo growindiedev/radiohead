@@ -9,12 +9,12 @@ import {
 } from "wagmi";
 import { abi as radioheadABI } from "../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import { formatEther } from "ethers/lib/utils.js";
-import { Song, metadata, finalSong, songsOwnedByUser } from "@/types";
+import { Song, metadata, songWithMetadata, songsOwnedByUser } from "@/types";
 import { demoSongs } from "./demosongs";
 import axios from "axios";
 
 export type contextType = {
-	songs: finalSong[];
+	songs: songWithMetadata[];
 	ownedSongs: songsOwnedByUser[];
 	setSongs: Dispatch<SetStateAction<any>>;
 	isLoading: boolean;
@@ -28,6 +28,7 @@ export function StateProvider({
 }: {
 	children: React.ReactNode;
 }): JSX.Element {
+	//hardcoded initial songs on frontend for all users
 	const demo: songsOwnedByUser[] = demoSongs.map((song) => ({
 		image: song.cover_art_url,
 		animation_url: song.url,
@@ -50,7 +51,7 @@ export function StateProvider({
 		ltdSongBalance: 0,
 	}));
 
-	const [songs, setSongs] = useState<finalSong[]>([]);
+	const [songs, setSongs] = useState<songWithMetadata[]>([]);
 	const [ownedSongs, setOwnedSongs] = useState<songsOwnedByUser[]>(demo);
 
 	const provider = useProvider();
@@ -62,7 +63,7 @@ export function StateProvider({
 
 	const retrieveOwnedSongs = async (
 		address: string,
-		contractData: finalSong[]
+		contractData: songWithMetadata[]
 	): Promise<songsOwnedByUser[]> => {
 		const playListSongs = await Promise.all(
 			contractData.map(async (song) => {
@@ -83,7 +84,9 @@ export function StateProvider({
 		return songsOwnedCurrently;
 	};
 
-	const retrieveAllSongs = async (data: Song[]): Promise<finalSong[]> => {
+	const retrieveAllSongs = async (
+		data: Song[]
+	): Promise<songWithMetadata[]> => {
 		const allSongs = await Promise.all(
 			data.map(async (item) => {
 				const obj = {
@@ -122,7 +125,7 @@ export function StateProvider({
 					address as `0x${string}`,
 					songs
 				);
-				setOwnedSongs((prev) => [...prev, ...songsOwnedCurrently]);
+				setOwnedSongs([...demo, ...songsOwnedCurrently]);
 			}
 		},
 
@@ -131,7 +134,11 @@ export function StateProvider({
 		},
 	});
 
-	const { isError, isLoading } = useContractRead({
+	const {
+		isError,
+		isLoading,
+		refetch: refetchAllSongs,
+	} = useContractRead({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
 		abi: radioheadABI,
 		functionName: "getSongs",
@@ -144,9 +151,45 @@ export function StateProvider({
 					address,
 					contractData
 				);
-				setOwnedSongs((prev) => [...prev, ...songsOwnedCurrently]);
+				setOwnedSongs([...demo, ...songsOwnedCurrently]);
 			}
 		},
+	});
+
+	useContractEvent({
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		abi: radioheadABI,
+		eventName: "regularSongBought",
+		listener(id, buyer) {
+			console.log("regularSongBought", id, buyer);
+			alert("regularSongBoughtt");
+			refetchAllSongs();
+		},
+		once: true,
+	});
+
+	useContractEvent({
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		abi: radioheadABI,
+		eventName: "limitedSongBought",
+		listener(id, buyer) {
+			console.log("limitedSongBought", id, buyer);
+			alert("limitedSongBought");
+			refetchAllSongs();
+		},
+		once: true,
+	});
+
+	useContractEvent({
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		abi: radioheadABI,
+		eventName: "songCreated",
+		listener(songId, ltdSongId) {
+			console.log("songCreated", songId, ltdSongId);
+			alert("songCreated");
+			refetchAllSongs();
+		},
+		once: true,
 	});
 
 	return (

@@ -9,6 +9,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 
 contract Radiohead is ERC1155URIStorage, ERC1155Supply {
+    string public name = "Radiohead";
+
     using Counters for Counters.Counter;
     Counters.Counter private songIdCounter;
     Escrow private escrow;

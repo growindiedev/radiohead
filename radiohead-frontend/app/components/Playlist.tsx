@@ -1,8 +1,8 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { StateContext } from "../StateProvider";
 import PlaylistSong from "./PlaylistSong";
-import { ToastContainer, Slide, Zoom } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 
 const Playlist = ({ children }: { children: React.ReactNode }) => {
 	const { ownedSongs } = useContext(StateContext);

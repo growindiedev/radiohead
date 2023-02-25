@@ -1,8 +1,10 @@
 "use client";
 import { useContext } from "react";
 import { StateContext } from "../StateProvider";
-import { useAccount } from "wagmi";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { formatEther } from "ethers/lib/utils.js";
+import { toast } from "react-toastify";
+import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 
 const Withdraw = () => {
 	const { songs } = useContext(StateContext);
@@ -49,13 +51,48 @@ const Withdraw = () => {
 		}
 	})();
 
+	const { config: regularConfig } = usePrepareContractWrite({
+		address: "0x41d83183343196664713b47b7846D8b1d6177fD3",
+		abi: radioheadABI,
+		functionName: "withdrawRoyalities",
+		enabled: isConnected,
+	});
+
+	const { isLoading, write } = useContractWrite({
+		...regularConfig,
+		onSuccess(data) {
+			toast.success(`Successfully submitted the request. Please wait `, {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
+		},
+		onError(error) {
+			toast.error(String(error), {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
+		},
+	});
+
 	if (songs.length === 0) {
 		return <div>loading...</div>;
 	}
 
 	return (
 		<div className="grid place-items-center h-full w-full grid-rows-[1fr_3fr_1fr]">
-			<div className="place-self-middle tex font-bold">My Revenue</div>
+			<div className="place-self-middle text-2xl font-bold">My Revenue</div>
 			<table className="table sm:w-1/2 text-center shadow-lg">
 				<thead>
 					<tr>
@@ -70,15 +107,15 @@ const Withdraw = () => {
 					</tr>
 					<tr>
 						<td>Revenue (Artist's)</td>
-						<td>{Revenue?.artistRevenueTotal}</td>
+						<td>{Revenue?.artistRevenueTotal || 0}</td>
 					</tr>
 					<tr>
 						<td>Platform (radiohead)</td>
-						<td>{Revenue?.platformRevenueTotal}</td>
+						<td>{Revenue?.platformRevenueTotal || 0}</td>
 					</tr>
 					<tr>
 						<td>Superfans</td>
-						<td>{Revenue?.superfanRevenueTotal}</td>
+						<td>{Revenue?.superfanRevenueTotal || 0}</td>
 					</tr>
 				</tbody>
 				<tfoot>
@@ -87,12 +124,18 @@ const Withdraw = () => {
 						<th>
 							{Revenue?.artistRevenueTotal +
 								Revenue?.platformRevenueTotal +
-								Revenue?.superfanRevenueTotal}
+								Revenue?.superfanRevenueTotal || 0}
 						</th>
 					</tr>
 				</tfoot>
 			</table>
-			<button className="btn btn-secondary">Withdraw</button>
+			<button
+				className="btn btn-secondary"
+				onClick={() => write?.()}
+				disabled={isLoading || !isConnected}
+			>
+				Withdraw
+			</button>
 		</div>
 	);
 };

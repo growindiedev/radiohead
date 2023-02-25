@@ -49,6 +49,8 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         uint superfanRoyality
     );
 
+    event withdrawFunds(address caller);
+
     constructor(address _escrow) ERC1155("") {
         escrow = Escrow(_escrow);
         Owner = msg.sender;
@@ -218,6 +220,8 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
             sentOwner,
             "failed to disribute royalities to the plaform Owner"
         );
+
+        emit withdrawFunds(msg.sender);
     }
 
     function getCurrentSongId() external view returns (uint current) {

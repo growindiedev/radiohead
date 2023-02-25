@@ -135,28 +135,26 @@ const SongCard = ({
 				<p>{attributes[0].value} &bull; Album</p>
 				<div className="card-actions justify-end my-2">
 					{address !== artist && (
-						<>
+						<div className="btn-group">
 							<button
 								disabled={isLoadingRegular || isErrorRegular || !mintRegular}
-								className="badge badge-secondary hover:bg-secondary-focus cursor-pointer"
+								//className="badge badge-secondary hover:bg-secondary-focus cursor-pointer"
+								className="btn btn-xs btn-primary"
 								onClick={() => mintRegular?.()}
 							>
-								{isLoadingRegular || isErrorRegular || !mintRegular
-									? "⌛️ .."
-									: "Buy Regular"}
+								Buy Regular
 							</button>
 							{limitedSupply !== limitedSongMinted && (
 								<button
 									disabled={isLoadingLimited || isErrorLimited || !mintLimited}
-									className="badge badge-primary active:bg-primary-focus cursor-pointer"
+									//className="badge badge-primary active:bg-primary-focus cursor-pointer"
+									className="btn btn-xs btn-primary btn-outline"
 									onClick={() => mintLimited?.()}
 								>
-									{isLoadingLimited || isErrorLimited || !mintLimited
-										? "⌛️ .."
-										: "Buy Limited"}
+									Buy Limited
 								</button>
 							)}
-						</>
+						</div>
 					)}
 					{address === artist && (
 						<div className="badge badge-success">Created by you</div>

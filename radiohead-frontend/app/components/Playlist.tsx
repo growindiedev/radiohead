@@ -16,8 +16,8 @@ const Playlist = ({ children }: { children: React.ReactNode }) => {
 			<div className="drawer-side">
 				<label htmlFor="my-drawer" className="drawer-overlay"></label>
 				<ul className="menu p-4 w-96 bg-base-100 text-base-content white-player-playlist">
-					<div className="badge badge-lg text badge-primary mx-auto mb-2">
-						Your Songs
+					<div className="bg-base-200 glass px-6 font-semibold mx-auto mb-2">
+						💀🎧 My Tunes 🎵📻
 					</div>
 					{ownedSongs.length > 0 &&
 						ownedSongs.map((song, i) => (

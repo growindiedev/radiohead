@@ -316,7 +316,7 @@ export default function CreateForm() {
 					/>
 				</div>
 				<button
-					disabled={Boolean(nftURI) || uploading}
+					disabled={Boolean(nftURI) || uploading || !isConnected}
 					className="btn w-full max-w-xs mt-2"
 					onClick={createMetaData}
 				>
@@ -324,7 +324,7 @@ export default function CreateForm() {
 				</button>
 				<button
 					//type="submit"
-					disabled={!write || !Boolean(nftURI) || isMinting}
+					disabled={!write || !Boolean(nftURI) || isMinting || !isConnected}
 					className="btn w-full max-w-xs mt-2"
 					onClick={handleSubmit(() => {
 						write?.();

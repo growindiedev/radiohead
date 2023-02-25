@@ -6,6 +6,11 @@ export type Song = {
 	limitedSupply: number;
 	ltdSongId: number;
 	songId: number;
+	regularRevenue: number;
+	ltdRevenue: number;
+	platformRoyality: number;
+	superfanRoyality: number;
+	superfans: string[];
 };
 
 export type metadata = {
@@ -39,6 +44,11 @@ export type songWithMetadata = {
 	limitedSupply: number;
 	ltdSongId: number;
 	songId: number;
+	regularRevenue: number;
+	ltdRevenue: number;
+	platformRoyality: number;
+	superfanRoyality: number;
+	superfans: string[];
 };
 
 export type songsOwnedByUser = {
@@ -59,6 +69,11 @@ export type songsOwnedByUser = {
 	limitedSupply: number;
 	ltdSongId: number;
 	songId: number;
+	regularRevenue: number;
+	ltdRevenue: number;
+	platformRoyality: number;
+	superfanRoyality: number;
+	superfans: string[];
 	regularSongBalance: number;
 	ltdSongBalance: number;
 };

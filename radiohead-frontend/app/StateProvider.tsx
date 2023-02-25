@@ -98,6 +98,11 @@ export function StateProvider({
 					limitedSupply: parseInt(String(item.limitedSupply)),
 					ltdSongId: parseInt(String(item.ltdSongId)),
 					songId: parseInt(String(item.songId)),
+					regularRevenue: parseInt(String(item.regularRevenue)),
+					ltdRevenue: parseInt(String(item.ltdRevenue)),
+					platformRoyality: parseInt(String(item.platformRoyality)),
+					superfanRoyality: parseInt(String(item.superfanRoyality)),
+					superfans: item.superfans,
 				};
 
 				const tokenURI = await contract?.uri(parseInt(String(item.songId)));

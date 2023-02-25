@@ -11,11 +11,6 @@ const AudioPlayer = () => {
 
 	useEffect(() => {
 		Amplitude.init({
-			bindings: {
-				37: "prev",
-				39: "next",
-				32: "play_pause",
-			},
 			callbacks: {
 				timeupdate: function () {
 					let percentage = Amplitude.getSongPlayedPercentage();

@@ -334,20 +334,6 @@ export default function CreateForm() {
 					{isMinting ? "creating..." : "create song"}
 				</button>
 			</form>
-			{/* {isSuccess && (
-				<div>
-					Successfully minted your NFT!
-					<div>
-						<a
-							className="link-primary"
-							href={`https://goerli.etherscan.io/tx/${data?.hash}`}
-						>
-							Etherscan
-						</a>
-					</div>
-				</div>
-			)}
-			{isError && <div>Error: {error?.message}</div>} */}
 		</>
 	);
 }

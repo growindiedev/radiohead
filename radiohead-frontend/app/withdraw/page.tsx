@@ -5,6 +5,7 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { formatEther } from "ethers/lib/utils.js";
 import { toast } from "react-toastify";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
+import Loading from "../components/Loading";
 
 const Withdraw = () => {
 	const { songs } = useContext(StateContext);
@@ -87,7 +88,7 @@ const Withdraw = () => {
 	});
 
 	if (songs.length === 0) {
-		return <div>loading...</div>;
+		return <Loading />;
 	}
 
 	return (
@@ -130,7 +131,7 @@ const Withdraw = () => {
 				</tfoot>
 			</table>
 			<button
-				className="btn btn-secondary"
+				className={`btn btn-secondary ${isLoading && `loading`}`}
 				onClick={() => write?.()}
 				disabled={isLoading || !isConnected}
 			>

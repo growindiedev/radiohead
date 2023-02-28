@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import React from "react";
+
 import { parseEther } from "ethers/lib/utils.js";
 
 const SongCard = ({
@@ -137,18 +138,20 @@ const SongCard = ({
 					{address !== artist && (
 						<div className="btn-group">
 							<button
-								disabled={isLoadingRegular || isErrorRegular || !mintRegular}
-								//className="badge badge-secondary hover:bg-secondary-focus cursor-pointer"
-								className="btn btn-xs btn-primary"
+								disabled={isLoadingRegular || !mintRegular}
+								className={`btn btn-xs btn-primary ${
+									(isLoadingRegular || !mintRegular) && `loading`
+								}`}
 								onClick={() => mintRegular?.()}
 							>
 								Buy Regular
 							</button>
 							{limitedSupply !== limitedSongMinted && (
 								<button
-									disabled={isLoadingLimited || isErrorLimited || !mintLimited}
-									//className="badge badge-primary active:bg-primary-focus cursor-pointer"
-									className="btn btn-xs btn-primary btn-outline"
+									disabled={isLoadingLimited || !mintLimited}
+									className={`btn btn-xs btn-primary btn-outline ${
+										(isLoadingLimited || !mintLimited) && `loading`
+									}`}
 									onClick={() => mintLimited?.()}
 								>
 									Buy Limited

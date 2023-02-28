@@ -36,11 +36,12 @@ const AudioPlayer = () => {
 	return (
 		<div className="fixed grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-2 rounded shadow-player-light bg-player-light-background border border-player-light-border w-full bottom-0">
 			<div className="px-10 py-4 flex items-center z-50 sm:row-span-2">
-				<img
-					data-amplitude-song-info="cover_art_url"
-					className="w-20 h-20 rounded-md mr-6 border border-bg-player-light-background"
-				/>
-
+				<label htmlFor="my-drawer" className="drawer-button cursor-pointer">
+					<img
+						data-amplitude-song-info="cover_art_url"
+						className="w-20 h-20 rounded-md mr-6 border border-bg-player-light-background"
+					/>
+				</label>
 				<div className="flex flex-col">
 					<span
 						data-amplitude-song-info="name"

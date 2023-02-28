@@ -317,7 +317,7 @@ export default function CreateForm() {
 				</div>
 				<button
 					disabled={Boolean(nftURI) || uploading || !isConnected}
-					className="btn w-full max-w-xs mt-2"
+					className={`btn w-full max-w-xs mt-2 ${uploading && `loading`}`}
 					onClick={createMetaData}
 				>
 					{uploading ? `⌛️ Uploading..` : `Upload to IPFS`}
@@ -325,7 +325,7 @@ export default function CreateForm() {
 				<button
 					//type="submit"
 					disabled={!write || !Boolean(nftURI) || isMinting || !isConnected}
-					className="btn w-full max-w-xs mt-2"
+					className={`btn w-full max-w-xs mt-2 ${isMinting && `loading`}`}
 					onClick={handleSubmit(() => {
 						write?.();
 						console.log(getValues());

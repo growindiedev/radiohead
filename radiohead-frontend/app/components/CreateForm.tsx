@@ -15,6 +15,7 @@ export default function CreateForm() {
 		handleSubmit,
 		formState: { errors },
 		getValues,
+		setValue,
 		watch,
 		reset,
 	} = useForm();
@@ -85,59 +86,39 @@ export default function CreateForm() {
 	const createMetaData = (e: any) => {
 		e.preventDefault();
 		const handleNFTStorage = async () => {
+			const client = new NFTStorage({
+				token:
+					"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDY5M2QxZjVDZEQyMDhGMjdGNTM5OGI2ZGM1ODdBM2Y5ODkxMGYzYkEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NjEyMDgxNjIxOCwibmFtZSI6InJhZGlvaGVhZCJ9.q_UYxh57NBUNnHTN7b4PTNfzTxC6eQ7layhT_HcH5UI",
+			});
+
+			const nft = {
+				description: getValues("description"),
+				image: getValues("coverArt")[0],
+				name: getValues("songName"),
+				animation_url: getValues("audio")[0],
+				attributes: [
+					{
+						trait_type: "Artist Name",
+						value: getValues("artistName"),
+					},
+				],
+			};
 			try {
-				const client = new NFTStorage({
-					token:
-						"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDY5M2QxZjVDZEQyMDhGMjdGNTM5OGI2ZGM1ODdBM2Y5ODkxMGYzYkEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NjEyMDgxNjIxOCwibmFtZSI6InJhZGlvaGVhZCJ9.q_UYxh57NBUNnHTN7b4PTNfzTxC6eQ7layhT_HcH5UI",
-				});
-				const nft = {
-					description: getValues("description"),
-					image: getValues("coverArt")[0],
-					name: getValues("songName"),
-					animation_url: getValues("audio")[0],
-					attributes: [
-						{
-							trait_type: "Artist Name",
-							value: getValues("artistName"),
-						},
-					],
-				};
 				setUploading(true);
 				const metadata = await client.store(nft);
 				setNftURI(metadata.url);
 				setUploading(false);
-				metadata.url &&
-					toast.success(
-						`Metadata creation successful: ${metadata.url.replace(
-							"ipfs://",
-							"https://ipfs.io/ipfs/"
-						)}`,
-						{
-							position: "top-center",
-							autoClose: 5000,
-							hideProgressBar: false,
-							closeOnClick: true,
-							pauseOnHover: true,
-							draggable: true,
-							progress: undefined,
-							theme: "colored",
-						}
-					);
 			} catch (error) {
 				setUploading(false);
-				toast.error(String(error), {
-					position: "top-center",
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: "colored",
-				});
+				console.log(error);
 			}
 		};
 		handleSubmit(handleNFTStorage)();
+		toast.promise(handleNFTStorage, {
+			pending: "Please wait while we upload your song to IPFS",
+			success: "Successfully uploaded 👌. Press the create the song button",
+			error: "Something went wrong 🤯",
+		});
 	};
 
 	return (

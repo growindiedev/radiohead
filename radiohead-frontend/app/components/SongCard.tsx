@@ -1,16 +1,11 @@
-// pass in the songId and ltdSongId
-// call buyRegularSong() buyLtdSong() using useContractWrite
-//also ppass in destruct the metadat in the parent and pass imgage, music URL, artist, description
-//pass in other details lik
 import { songWithMetadata } from "@/types";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { parseEther } from "ethers/lib/utils.js";
 
 import React from "react";
-
-import { parseEther } from "ethers/lib/utils.js";
 
 const SongCard = ({
 	songId,

@@ -140,7 +140,7 @@ const SongCard = ({
 							<button
 								disabled={isLoadingRegular || !mintRegular}
 								className={`btn btn-xs btn-primary ${
-									(isLoadingRegular || !mintRegular) && `loading`
+									isLoadingRegular && `loading`
 								}`}
 								onClick={() => mintRegular?.()}
 							>
@@ -150,7 +150,7 @@ const SongCard = ({
 								<button
 									disabled={isLoadingLimited || !mintLimited}
 									className={`btn btn-xs btn-primary btn-outline ${
-										(isLoadingLimited || !mintLimited) && `loading`
+										isLoadingLimited && `loading`
 									}`}
 									onClick={() => mintLimited?.()}
 								>

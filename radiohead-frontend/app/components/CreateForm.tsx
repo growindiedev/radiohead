@@ -15,16 +15,13 @@ export default function CreateForm() {
 		handleSubmit,
 		formState: { errors },
 		getValues,
-		setValue,
-		watch,
 		reset,
 	} = useForm();
 
 	const { isConnected } = useAccount();
-
 	const [nftURI, setNftURI] = useState<string>("");
 	const [uploading, setUploading] = useState<boolean>(false);
-	const deBouncedInputData = useDebounce(getValues(), 200)[0];
+	const deBouncedInputData = useDebounce(getValues(), 1000)[0];
 
 	const { config } = usePrepareContractWrite({
 		address: "0x41d83183343196664713b47b7846D8b1d6177fD3",
@@ -43,14 +40,7 @@ export default function CreateForm() {
 		],
 	});
 
-	const {
-		data,
-		isLoading: isMinting,
-		write,
-		error,
-		isError,
-		isSuccess,
-	} = useContractWrite({
+	const { isLoading: isMinting, write } = useContractWrite({
 		...config,
 		onSuccess(data) {
 			reset();
@@ -98,8 +88,12 @@ export default function CreateForm() {
 				animation_url: getValues("audio")[0],
 				attributes: [
 					{
-						trait_type: "Artist Name",
+						trait_type: "Artist",
 						value: getValues("artistName"),
+					},
+					{
+						trait_type: "Album",
+						value: getValues("albumName"),
 					},
 				],
 			};
@@ -156,7 +150,7 @@ export default function CreateForm() {
 					</label>
 					<input
 						type="text"
-						className="input input-bordered  input-sm w-full max-w-xs"
+						className="input input-bordered input-sm w-full max-w-xs"
 						placeholder="Song Name"
 						disabled={Boolean(nftURI)}
 						{...register("songName", { required: true })}
@@ -164,11 +158,23 @@ export default function CreateForm() {
 				</div>
 				<div className="form-control w-full max-w-xs">
 					<label className="label">
-						<span className="label-text">Description</span>
+						<span className="label-text">Album</span>
 					</label>
 					<input
 						type="text"
-						className="input input-bordered w-full input-sm max-w-xs"
+						className="input input-bordered input-sm w-full max-w-xs"
+						placeholder="Album Name"
+						disabled={Boolean(nftURI)}
+						{...register("albumName", { required: true })}
+					/>
+				</div>
+				<div className="form-control w-full col-span-full">
+					<label className="label">
+						<span className="label-text">Description</span>
+					</label>
+					<textarea
+						//type="text"
+						className="input input-bordered w-full input-sm"
 						placeholder="Description"
 						disabled={Boolean(nftURI)}
 						{...register("description", { required: true })}
@@ -304,13 +310,9 @@ export default function CreateForm() {
 					{uploading ? `⌛️ Uploading..` : `Upload to IPFS`}
 				</button>
 				<button
-					//type="submit"
-					disabled={!write || !Boolean(nftURI) || isMinting || !isConnected}
 					className={`btn w-full max-w-xs mt-2 ${isMinting && `loading`}`}
-					onClick={handleSubmit(() => {
-						write?.();
-						console.log(getValues());
-					})}
+					disabled={!write || !Boolean(nftURI) || isMinting || !isConnected}
+					onClick={handleSubmit(() => write?.())}
 				>
 					{isMinting ? "creating..." : "create song"}
 				</button>

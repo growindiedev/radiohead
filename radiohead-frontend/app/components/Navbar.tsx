@@ -27,6 +27,9 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
 						className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
 					>
 						<li>
+							<Link href="/">Home</Link>
+						</li>
+						<li>
 							<Link href="/create">Create</Link>
 						</li>
 						<li>
@@ -43,6 +46,9 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
 			</div>
 			<div className="navbar-center hidden lg:flex">
 				<ul className="menu menu-horizontal px-1">
+					<li>
+						<Link href="/">Home</Link>
+					</li>
 					<li>
 						<Link href="/create">Create</Link>
 					</li>

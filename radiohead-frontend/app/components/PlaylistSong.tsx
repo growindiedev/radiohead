@@ -31,7 +31,9 @@ const PlaylistSong = ({
 			<div>
 				<div className="font-bold text-sm">{name}</div>
 				{/* <div className="text-sm opacity-50 animate-marquee whitespace-nowrap overflow-hidden absolute"> */}
-				<div className="text-xs mb-1">{attributes[0].value} &bull; Album</div>
+				<div className="text-xs mb-1">
+					{attributes[0]?.value} &bull; {attributes[1]?.value}
+				</div>
 				<div className="flex gap-1">
 					<div className="badge badge-xs badge-secondary">
 						limited: {formatNumber(ltdSongBalance)}

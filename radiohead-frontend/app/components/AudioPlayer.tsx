@@ -24,7 +24,7 @@ const AudioPlayer = () => {
 			songs: ownedSongs.map((song) => ({
 				name: song.name,
 				artist: song.attributes[0].value,
-				album: "The Album",
+				album: song.attributes[1]?.value,
 				url: song.animation_url,
 				cover_art_url: song.image,
 			})),

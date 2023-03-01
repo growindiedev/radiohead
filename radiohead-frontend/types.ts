@@ -20,6 +20,10 @@ export type metadata = {
 		{
 			trait_type: string;
 			value: string;
+		},
+		{
+			trait_type: string;
+			value: string;
 		}
 	];
 	image: string;
@@ -32,6 +36,10 @@ export type songWithMetadata = {
 	description: string;
 	name: string;
 	attributes: [
+		{
+			trait_type: string;
+			value: string;
+		},
 		{
 			trait_type: string;
 			value: string;
@@ -57,6 +65,10 @@ export type songsOwnedByUser = {
 	description: string;
 	name: string;
 	attributes: [
+		{
+			trait_type: string;
+			value: string;
+		},
 		{
 			trait_type: string;
 			value: string;

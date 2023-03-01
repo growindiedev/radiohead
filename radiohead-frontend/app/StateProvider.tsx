@@ -40,6 +40,10 @@ export function StateProvider({
 				trait_type: "artist",
 				value: song.artist,
 			},
+			{
+				trait_type: "album",
+				value: song.album,
+			},
 		],
 		artist: "radiohead",
 		regularPrice: "0",

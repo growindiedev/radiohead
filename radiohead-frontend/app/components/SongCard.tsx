@@ -128,7 +128,9 @@ const SongCard = ({
 					{limitedSongMinted}/{limitedSupply} Minted
 				</div>
 				<h2 className="card-title">{name}</h2>
-				<p>{attributes[0].value} &bull; Album</p>
+				<p>
+					{attributes[0]?.value} &bull; {attributes[1]?.value}
+				</p>
 				<div className="card-actions justify-end my-2">
 					{address !== artist && (
 						<div className="btn-group">

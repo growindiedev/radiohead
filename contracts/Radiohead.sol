@@ -67,7 +67,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         require(_limitedSupply > 0, "Limited supply must be greater than 0");
         songIdCounter.increment();
         songId = songIdCounter.current();
-        _mint(msg.sender, songId, 10 ** 18, "");
+        _mint(msg.sender, songId, 10 ** 12, "");
         _setURI(songId, _songURI);
         Song storage currentSong = songsArray.push();
         currentSong.artist = msg.sender;

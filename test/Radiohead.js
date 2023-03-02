@@ -38,6 +38,15 @@ const deployRadioheadFixture = async () => {
 };
 
 const deployWithdrawFixture = async () => {
+	// Compare two BigNumbers that are close to one another.
+	//
+	// This is useful for when you want to compare the balance of an address after
+	// it executes a transaction, and you don't want to worry about accounting for
+	// balances changes due to paying for gas a.k.a. transaction fees.
+
+	const closeTo = async (a, b, margin) => {
+		expect(a).to.be.closeTo(b, margin);
+	};
 	const [
 		owner,
 		artist1,
@@ -59,20 +68,20 @@ const deployWithdrawFixture = async () => {
 		.createSong(6, parseEther("2"), parseEther("5"), "uri", 5, 20);
 
 	await radiohead
-		.connect(artist1)
+		.connect(artist2)
 		.createSong(3, parseEther("3"), parseEther("7"), "uri", 4, 17);
 
-	// await radiohead
-	// 	.connect(regularBuyer1)
-	// 	.buyRegularSong(1, { value: parseEther("2") });
+	await radiohead
+		.connect(regularBuyer1)
+		.buyRegularSong(1, { value: parseEther("2") });
 
-	// await radiohead
-	// 	.connect(regularBuyer1)
-	// 	.buyRegularSong(1, { value: parseEther("2") });
+	await radiohead
+		.connect(regularBuyer1)
+		.buyRegularSong(1, { value: parseEther("2") });
 
-	// await radiohead
-	// 	.connect(superFan1)
-	// 	.buyLimitedSong(1, { value: parseEther("5") });
+	await radiohead
+		.connect(superFan1)
+		.buyLimitedSong(1, { value: parseEther("5") });
 
 	await radiohead
 		.connect(regularBuyer2)
@@ -90,9 +99,49 @@ const deployWithdrawFixture = async () => {
 		.connect(superFan1)
 		.buyLimitedSong(3, { value: parseEther("7") });
 
-	// await radiohead
-	// 	.connect(superFan2)
-	// 	.buyLimitedSong(3, { value: parseEther("7") });
+	await radiohead
+		.connect(superFan2)
+		.buyLimitedSong(3, { value: parseEther("7") });
+
+	const calcSongs = (songsCreated) => {
+		let platformRevenueTotal = 0;
+		let artistRevenueTotal = 0;
+		let superfanRevenueTotal = 0;
+
+		for (let i = 0; i < songsCreated.length; i++) {
+			const currentSong = songsCreated[i];
+			// for regular songs
+			const platformRevenueRegular =
+				(currentSong.regularRevenue / 100) * currentSong.platformRoyality;
+			const artistRevenueRegular =
+				currentSong.regularRevenue - platformRevenueRegular;
+
+			// for limited songs
+			const platformRevenueLtd =
+				(currentSong.ltdRevenue / 100) * currentSong.platformRoyality;
+			const artistRevenueLtd = currentSong.ltdRevenue - platformRevenueLtd;
+
+			//calculate the limited edition songs to superfans
+			const superfans = currentSong.superfans;
+			const microRevenue =
+				((currentSong.regularRevenue / 100) * currentSong.superfanRoyality) /
+				currentSong.limitedSupply;
+			const superfanRevenue = microRevenue * superfans.length;
+
+			// total artist revenue
+			const artistRevenue =
+				artistRevenueRegular + artistRevenueLtd - superfanRevenue;
+
+			artistRevenueTotal += artistRevenue;
+			superfanRevenueTotal += superfanRevenue;
+			platformRevenueTotal += platformRevenueRegular + platformRevenueLtd;
+		}
+		return {
+			platformRevenueTotal,
+			artistRevenueTotal,
+			superfanRevenueTotal,
+		};
+	};
 
 	return {
 		escrow,
@@ -104,6 +153,8 @@ const deployWithdrawFixture = async () => {
 		superFan1,
 		regularBuyer2,
 		superFan2,
+		calcSongs,
+		closeTo,
 	};
 };
 
@@ -124,7 +175,7 @@ describe("create a song", () => {
 		let currentSongCounter = await radiohead.getCurrentSongId();
 		expect(
 			await radiohead.balanceOf(artist1.address, currentSongCounter - 1)
-		).to.equal(BigInt(10 ** 18)); //regular songs
+		).to.equal(BigInt(10 ** 12)); //regular songs
 	});
 
 	it("create a limited song", async () => {
@@ -164,12 +215,14 @@ describe("buy song", async () => {
 		expect(await radiohead.balanceOf(superFan.address, 2)).to.equal(1);
 	});
 
+	const song = await radiohead.getSong(1);
+
 	await radiohead.connect(artist1).withdrawRoyalities();
 	console.log("balance", artist1.getBalance());
 });
 
-describe("withdraw funds", async () => {
-	it("artist can withdraw", async () => {
+describe("withdraw", async () => {
+	it("only artist or superfan can withdraw", async () => {
 		const {
 			escrow,
 			radiohead,
@@ -182,64 +235,87 @@ describe("withdraw funds", async () => {
 			superFan2,
 		} = await loadFixture(deployWithdrawFixture);
 
-		const toRound = (num) => {
-			String(num).slice(0, 5);
-		};
+		//reverted with wasn't working. Check: https://github.com/TrueFiEng/Waffle/issues/95#issuecomment-1036791938
+		//https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
+		await expect(
+			radiohead.connect(regularBuyer1).withdrawRoyalities()
+		).to.revertedWith(
+			"Only artists and superfans can intitiate withdraw process"
+		);
 
-		const song = await radiohead.getSong(3);
-		const prevArtist1Balance = await artist1.getBalance();
-		const prevSuperfan1Balance = await superFan1.getBalance();
-		await radiohead.connect(artist1).withdrawRoyalities();
-		let platformBalance = await ethers.provider.getBalance(radiohead.address);
-		//platformBalance = platformBalance.toString().slice(0, 4);
-		const currentArtist1Balance = await artist1.getBalance();
-		const currentSuperfan1Balance = await superFan1.getBalance();
-		const artist1Balance = currentArtist1Balance - prevArtist1Balance;
-		// .toString()
-		// .slice(0, 4);
-		const superfan1Balance = currentSuperfan1Balance - prevSuperfan1Balance;
-		// .toString()
-		// .slice(0, 4);
+		await expect(
+			radiohead.connect(regularBuyer2).withdrawRoyalities()
+		).to.revertedWith(
+			"Only artists and superfans can intitiate withdraw process"
+		);
 
-		const calcPlatformRoyality =
-			(song.platformRoyality * song.ltdRevenue) / 100 +
-			(song.platformRoyality * song.regularRevenue) / 100;
-		// .toString()
-		// .slice(0, 4);
-		let superfan1Songs = await radiohead.getSongOwners(superFan1.address);
-		let noOfOwnedfGivenSong = superfan1Songs
-			.map((i) => Number(i))
-			.reduce((acc, item) => {
-				if (item == Number(song.ltdSongId)) {
-					acc += 1;
-				}
-				return acc;
-			}, 0);
+		await expect(radiohead.connect(artist1).withdrawRoyalities()).to.emit(
+			radiohead,
+			"withdrawnFunds"
+		);
 
-		const calcSuperfanRoyality =
-			(((song.regularRevenue / 100) * song.superfanRoyality) /
-				song.limitedSupply) *
-			noOfOwnedfGivenSong;
-		// .toString()
-		// .slice(0, 4);
+		await expect(radiohead.connect(superFan1).withdrawRoyalities()).to.emit(
+			radiohead,
+			"withdrawnFunds"
+		);
+	});
 
-		const calcArtist1Royality =
-			song.regularRevenue -
-			(song.platformRoyality * song.regularRevenue) / 100 +
-			(song.ltdRevenue - (song.platformRoyality * song.ltdRevenue) / 100) -
-			calcSuperfanRoyality * song.superfans.length;
+	it("royality distribution to platform owner", async () => {
+		const {
+			escrow,
+			radiohead,
+			owner,
+			artist1,
+			artist2,
+			regularBuyer1,
+			superFan1,
+			regularBuyer2,
+			superFan2,
+			calcSongs,
+		} = await loadFixture(deployWithdrawFixture);
 
-		// const calcArtist1Royality = (
-		// 	song.regularRevenue +
-		// 	song.ltdRevenue -
-		// 	platformBalance -
-		// 	calcSuperfanRoyality * song.superfans.length
-		// )
-		// 	.toString()
-		// 	.slice(0, 4);
-		//expect(BigInt(calcSuperfanRoyality)).to.equal(BigInt(superfan1Balance));
-		expect(BigInt(calcPlatformRoyality)).to.equal(BigInt(platformBalance));
+		const songs = await radiohead.getSongs();
+		const { platformRevenueTotal } = calcSongs(songs);
 
-		expect(BigInt(calcArtist1Royality)).to.equal(BigInt(artist1Balance));
+		await expect(
+			radiohead.connect(artist1).withdrawRoyalities()
+		).to.changeEtherBalance(owner, BigInt(platformRevenueTotal));
+	});
+
+	it("royality distribution to artists", async () => {
+		const {
+			escrow,
+			radiohead,
+			owner,
+			artist1,
+			artist2,
+			regularBuyer1,
+			superFan1,
+			regularBuyer2,
+			superFan2,
+			calcSongs,
+			closeTo,
+		} = await loadFixture(deployWithdrawFixture);
+
+		const songs = await radiohead.getSongs();
+
+		//artist1;
+		// const artist1Songs = songs.filter(
+		// 	(song) => song.artist === artist1.address
+		// );
+		// const { artistRevenueTotal: artist1RevenueTotal } = calcSongs(artist1Songs);
+
+		// await expect(
+		// 	radiohead.connect(artist1).withdrawRoyalities()
+		// ).to.changeEtherBalance(artist1, BigInt(artist1RevenueTotal));
+
+		//artist2
+		const artist2Songs = songs.filter(
+			(song) => song.artist === artist2.address
+		);
+		const { artistRevenueTotal: artist2RevenueTotal } = calcSongs(artist2Songs);
+		await expect(
+			radiohead.connect(artist2).withdrawRoyalities()
+		).to.changeEtherBalance(artist2, BigInt(artist2RevenueTotal));
 	});
 });

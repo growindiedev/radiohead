@@ -49,11 +49,33 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         uint superfanRoyality
     );
 
-    event withdrawFunds(address caller);
+    event withdrawnFunds(address caller);
 
     constructor(address _escrow) ERC1155("") {
         escrow = Escrow(_escrow);
         Owner = msg.sender;
+    }
+
+    modifier onlyCreatorOrSuperfan() {
+        bool isCreatorOrsuperfan = false;
+        for (uint i = 0; i < songsArray.length; i++) {
+            Song memory currentSong = songsArray[i];
+            if (
+                balanceOf(msg.sender, currentSong.ltdSongId) > 0 ||
+                currentSong.artist == msg.sender
+            ) {
+                isCreatorOrsuperfan = true;
+                break;
+            }
+        }
+        if (msg.sender == Owner) {
+            isCreatorOrsuperfan = true;
+        }
+        require(
+            isCreatorOrsuperfan,
+            "Only artists and superfans can intitiate withdraw process"
+        );
+        _;
     }
 
     function createSong(
@@ -162,7 +184,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
         emit limitedSongBought(currentSong.ltdSongId, msg.sender);
     }
 
-    function withdrawRoyalities() external {
+    function withdrawRoyalities() external onlyCreatorOrSuperfan {
         for (uint i = 0; i < songsArray.length; i++) {
             Song storage currentSong;
             currentSong = songsArray[i];
@@ -221,7 +243,7 @@ contract Radiohead is ERC1155URIStorage, ERC1155Supply {
             "failed to disribute royalities to the plaform Owner"
         );
 
-        emit withdrawFunds(msg.sender);
+        emit withdrawnFunds(msg.sender);
     }
 
     function getCurrentSongId() external view returns (uint current) {

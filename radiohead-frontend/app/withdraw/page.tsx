@@ -6,6 +6,7 @@ import { formatEther } from "ethers/lib/utils.js";
 import { toast } from "react-toastify";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import Loading from "../components/Loading";
+import { RADIOHEAD_GOERLI } from "@/constants";
 
 const Withdraw = () => {
 	const { songs } = useContext(StateContext);
@@ -53,7 +54,7 @@ const Withdraw = () => {
 	})();
 
 	const { config: regularConfig } = usePrepareContractWrite({
-		address: "0x41d83183343196664713b47b7846D8b1d6177fD3",
+		address: RADIOHEAD_GOERLI,
 		abi: radioheadABI,
 		functionName: "withdrawRoyalities",
 		enabled: isConnected,

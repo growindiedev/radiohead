@@ -13,6 +13,7 @@ import { Song, metadata, songWithMetadata, songsOwnedByUser } from "@/types";
 import { demoSongs } from "./demosongs";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { RADIOHEAD_GOERLI } from "@/constants";
 
 export type contextType = {
 	songs: songWithMetadata[];
@@ -61,7 +62,7 @@ export function StateProvider({
 
 	const provider = useProvider();
 	const contract = useContract({
-		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		address: RADIOHEAD_GOERLI, //v4
 		abi: radioheadABI,
 		signerOrProvider: provider,
 	});
@@ -149,10 +150,10 @@ export function StateProvider({
 		isLoading,
 		refetch: refetchAllSongs,
 	} = useContractRead({
-		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		address: RADIOHEAD_GOERLI,
 		abi: radioheadABI,
 		functionName: "getSongs",
-		cacheTime: 5000,
+		cacheTime: 500,
 		onSuccess: async (data: Song[]) => {
 			const contractData = await retrieveAllSongs(data);
 			setSongs(contractData);
@@ -167,13 +168,13 @@ export function StateProvider({
 	});
 
 	useContractEvent({
-		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		address: RADIOHEAD_GOERLI,
 		abi: radioheadABI,
 		eventName: "regularSongBought",
 		listener(id) {
 			toast.success(`Successfully minted the regular song of id ${id} `, {
 				position: "top-center",
-				autoClose: 5000,
+				autoClose: 500,
 				hideProgressBar: false,
 				closeOnClick: true,
 				pauseOnHover: true,
@@ -187,7 +188,7 @@ export function StateProvider({
 	});
 
 	useContractEvent({
-		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		address: RADIOHEAD_GOERLI,
 		abi: radioheadABI,
 		eventName: "limitedSongBought",
 		listener(id) {
@@ -207,12 +208,35 @@ export function StateProvider({
 	});
 
 	useContractEvent({
-		address: "0x41d83183343196664713b47b7846D8b1d6177fD3", //v3
+		address: RADIOHEAD_GOERLI,
 		abi: radioheadABI,
 		eventName: "songCreated",
 		listener(songId, ltdSongId) {
 			toast.success(
 				`Successfully created your song with songId: ${songId} and ltdSongId: ${ltdSongId}`,
+				{
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+				}
+			);
+			refetchAllSongs();
+		},
+		once: true,
+	});
+
+	useContractEvent({
+		address: RADIOHEAD_GOERLI,
+		abi: radioheadABI,
+		eventName: "withdrawnFunds",
+		listener(caller) {
+			toast.success(
+				`Successfully initiated the withdrawal of funds by ${caller}`,
 				{
 					position: "top-center",
 					autoClose: 5000,

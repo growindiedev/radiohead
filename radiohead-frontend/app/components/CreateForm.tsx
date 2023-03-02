@@ -8,6 +8,7 @@ import { useDebounce } from "use-debounce";
 import { parseEther } from "ethers/lib/utils.js";
 import { ErrorMessage } from "@hookform/error-message";
 import { toast } from "react-toastify";
+import { NFTSTORAGEAPI, RADIOHEAD_GOERLI } from "@/constants";
 
 export default function CreateForm() {
 	const {
@@ -24,7 +25,7 @@ export default function CreateForm() {
 	const deBouncedInputData = useDebounce(getValues(), 1000)[0];
 
 	const { config } = usePrepareContractWrite({
-		address: "0x41d83183343196664713b47b7846D8b1d6177fD3",
+		address: RADIOHEAD_GOERLI,
 		abi: radioheadABI,
 		functionName: "createSong",
 		enabled: isConnected && Boolean(nftURI),
@@ -77,8 +78,7 @@ export default function CreateForm() {
 		e.preventDefault();
 		const handleNFTStorage = async () => {
 			const client = new NFTStorage({
-				token:
-					"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDY5M2QxZjVDZEQyMDhGMjdGNTM5OGI2ZGM1ODdBM2Y5ODkxMGYzYkEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NjEyMDgxNjIxOCwibmFtZSI6InJhZGlvaGVhZCJ9.q_UYxh57NBUNnHTN7b4PTNfzTxC6eQ7layhT_HcH5UI",
+				token: NFTSTORAGEAPI,
 			});
 
 			const nft = {

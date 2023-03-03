@@ -1,6 +1,6 @@
 "use client";
 
-import { StateContext } from "../StateProvider";
+import { StateContext } from "./StateProvider";
 import { useContext } from "react";
 import SongCard from "./SongCard";
 import Loading from "./Loading";

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useContext } from "react";
 /* @ts-ignore */
 import Amplitude from "amplitudejs";
-import { StateContext } from "../StateProvider";
+import { StateContext } from "./StateProvider";
 
 const AudioPlayer = () => {
 	const slider = useRef(null);

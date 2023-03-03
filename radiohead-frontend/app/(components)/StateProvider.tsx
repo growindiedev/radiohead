@@ -7,7 +7,7 @@ import {
 	useProvider,
 	useContractEvent,
 } from "wagmi";
-import { abi as radioheadABI } from "../../artifacts/contracts/Radiohead.sol/Radiohead.json";
+import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
 import { formatEther } from "ethers/lib/utils.js";
 import { Song, metadata, songWithMetadata, songsOwnedByUser } from "@/types";
 import { demoSongs } from "./demosongs";

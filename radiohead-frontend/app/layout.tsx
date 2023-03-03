@@ -1,4 +1,4 @@
-import { StateContext, StateProvider } from "./StateProvider";
+import { StateContext, StateProvider } from "./(components)/StateProvider";
 import WagmiContext from "./(components)/WagmiContext";
 import ConnectButton from "./(components)/ConnectButton";
 import AudioPlayer from "./(components)/AudioPlayer";

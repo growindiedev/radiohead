@@ -1,6 +1,6 @@
 "use client";
 import { useContext } from "react";
-import { StateContext } from "../StateProvider";
+import { StateContext } from "./StateProvider";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { formatEther } from "ethers/lib/utils.js";
 import { toast } from "react-toastify";

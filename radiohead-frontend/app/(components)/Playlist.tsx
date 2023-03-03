@@ -1,6 +1,6 @@
 "use client";
 import { useContext } from "react";
-import { StateContext } from "../StateProvider";
+import { StateContext } from "./StateProvider";
 import PlaylistSong from "./PlaylistSong";
 import { ToastContainer, Slide } from "react-toastify";
 

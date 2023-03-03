@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useContext } from "react";
 /* @ts-ignore */
 import Amplitude from "amplitudejs";
 import { StateContext } from "../StateProvider";
-import Image from "next/image";
 
 const AudioPlayer = () => {
 	const slider = useRef(null);

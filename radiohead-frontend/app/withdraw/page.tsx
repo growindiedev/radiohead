@@ -1,4 +1,6 @@
 import Withdraw from "../(components)/Withdraw";
-const page = () => {
+const Page = () => {
 	return <Withdraw />;
 };
+
+export default Page;

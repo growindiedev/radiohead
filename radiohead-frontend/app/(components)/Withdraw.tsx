@@ -5,7 +5,7 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { formatEther } from "ethers/lib/utils.js";
 import { toast } from "react-toastify";
 import { abi as radioheadABI } from "../../../artifacts/contracts/Radiohead.sol/Radiohead.json";
-import Loading from "./Loading";
+import Loading from "../(components)/Loading";
 import { RADIOHEAD_GOERLI } from "@/constants";
 
 const Withdraw = () => {

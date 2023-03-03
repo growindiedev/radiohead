@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useContext } from "react";
+/* @ts-ignore */
 import Amplitude from "amplitudejs";
 import { StateContext } from "../StateProvider";
 import Image from "next/image";
@@ -18,6 +19,7 @@ const AudioPlayer = () => {
 					if (isNaN(percentage)) {
 						percentage = 0;
 					}
+					/* @ts-ignore */
 					slider.current.style.backgroundSize = percentage + "% 100%";
 				},
 			},

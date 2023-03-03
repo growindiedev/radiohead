@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useContext } from "react";
 import { StateContext } from "../StateProvider";
@@ -11,7 +10,7 @@ import { RADIOHEAD_GOERLI } from "@/constants";
 
 const Withdraw = () => {
 	const { songs } = useContext(StateContext);
-	//const { address, isConnected } = useAccount();
+	const { address, isConnected } = useAccount();
 
 	const songsCreated = songs && songs.filter((song) => song.artist === address);
 	const Revenue = (() => {
@@ -125,9 +124,14 @@ const Withdraw = () => {
 					<tr>
 						<th>Total</th>
 						<th>
-							{Revenue?.artistRevenueTotal +
-								Revenue?.platformRevenueTotal +
-								Revenue?.superfanRevenueTotal || 0}
+							{
+								/* @ts-ignore */
+								Revenue?.artistRevenueTotal +
+									/* @ts-ignore */
+									Revenue?.platformRevenueTotal +
+									/* @ts-ignore */
+									Revenue?.superfanRevenueTotal || 0
+							}
 						</th>
 					</tr>
 				</tfoot>

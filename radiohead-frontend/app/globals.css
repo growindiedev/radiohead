@@ -1049,3 +1049,9 @@ div.amplitude-repeat-song.amplitude-repeat-song-on svg path {
 	@apply bg-base-300;
 	@apply shadow-sm;
 }
+
+@layer base {
+	[data-nextjs-scroll-focus-boundary] {
+		display: contents;
+	}
+}

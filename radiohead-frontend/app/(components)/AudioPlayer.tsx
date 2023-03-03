@@ -10,7 +10,7 @@ const AudioPlayer = () => {
 	const { ownedSongs } = useContext(StateContext);
 
 	useEffect(() => {
-		Amplitude.init({
+		Amplitude?.init({
 			callbacks: {
 				timeupdate: function () {
 					let percentage = Amplitude.getSongPlayedPercentage();
@@ -30,8 +30,6 @@ const AudioPlayer = () => {
 				cover_art_url: song.image,
 			})),
 		});
-
-		Amplitude.bindNewElements();
 	}, [ownedSongs]);
 
 	return (

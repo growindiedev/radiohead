@@ -55,7 +55,20 @@ export function StateProvider({
 		songId: 0,
 		regularSongBalance: 0,
 		ltdSongBalance: 0,
+		regularRevenue: 0,
+		ltdRevenue: 0,
+		platformRoyality: 0,
+		superfanRoyality: 0,
+		superfans: [],
 	}));
+
+	// regularRevenue: number;
+	// ltdRevenue: number;
+	// platformRoyality: number;
+	// superfanRoyality: number;
+	// superfans: string[];
+	// regularSongBalance: number;
+	// ltdSongBalance: number;
 
 	const [songs, setSongs] = useState<songWithMetadata[]>([]);
 	const [ownedSongs, setOwnedSongs] = useState<songsOwnedByUser[]>(demo);

@@ -1,6 +1,4 @@
-import Main from "./components/Main";
-const page = () => {
+import Main from "./(components)/Main";
+const Page = () => {
 	return <Main />;
 };
-
-export default page;

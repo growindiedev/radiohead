@@ -1,4 +1,4 @@
-import CreateForm from "../components/CreateForm";
+import CreateForm from "../(components)/CreateForm";
 
 const Create = () => {
 	return (
@@ -7,5 +7,3 @@ const Create = () => {
 		</div>
 	);
 };
-
-export default Create;

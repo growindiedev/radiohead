@@ -1,9 +1,9 @@
 import { StateContext, StateProvider } from "./StateProvider";
-import WagmiContext from "./components/WagmiContext";
-import ConnectButton from "./components/ConnectButton";
-import AudioPlayer from "./components/AudioPlayer";
-import Navbar from "./components/Navbar";
-import Playlist from "./components/Playlist";
+import WagmiContext from "./(components)/WagmiContext";
+import ConnectButton from "./(components)/ConnectButton";
+import AudioPlayer from "./(components)/AudioPlayer";
+import Navbar from "./(components)/Navbar";
+import Playlist from "./(components)/Playlist";
 import "./globals.css";
 
 export default function RootLayout({

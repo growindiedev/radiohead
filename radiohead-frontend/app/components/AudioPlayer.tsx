@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext, useState } from "react";
 /* @ts-ignore */
 import Amplitude from "amplitudejs";
 import { StateContext } from "../StateProvider";
+import { set } from "react-hook-form";
 
 const AudioPlayer = () => {
 	const slider = useRef(null);
@@ -30,8 +31,6 @@ const AudioPlayer = () => {
 				cover_art_url: song.image,
 			})),
 		});
-
-		Amplitude.bindNewElements();
 	}, [ownedSongs]);
 
 	return (

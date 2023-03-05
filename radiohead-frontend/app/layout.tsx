@@ -1,4 +1,3 @@
-"use client";
 import { StateContext, StateProvider } from "./StateProvider";
 import WagmiContext from "./components/WagmiContext";
 import ConnectButton from "./components/ConnectButton";

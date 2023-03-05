@@ -3,11 +3,18 @@ import React, { useEffect, useRef, useContext, useState } from "react";
 /* @ts-ignore */
 import Amplitude from "amplitudejs";
 import { StateContext } from "../StateProvider";
-import { set } from "react-hook-form";
+import { useAccount } from "wagmi";
 
 const AudioPlayer = () => {
+	const { isConnected } = useAccount({
+		onDisconnect: () => {
+			Amplitude.stop();
+		},
+		onConnect: () => {
+			Amplitude.stop();
+		},
+	});
 	const slider = useRef(null);
-
 	const { ownedSongs } = useContext(StateContext);
 
 	useEffect(() => {
@@ -31,7 +38,8 @@ const AudioPlayer = () => {
 				cover_art_url: song.image,
 			})),
 		});
-	}, [ownedSongs]);
+		Amplitude.bindNewElements();
+	}, [ownedSongs, isConnected]);
 
 	return (
 		<div className="fixed grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-2 rounded shadow-player-light bg-player-light-background border border-player-light-border w-full bottom-0">

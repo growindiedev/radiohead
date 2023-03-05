@@ -1,7 +1,6 @@
 import React from "react";
 import { songsOwnedByUser } from "@/types";
 /* @ts-ignore */
-import Amplitude from "amplitudejs";
 
 const PlaylistSong = ({
 	songId,

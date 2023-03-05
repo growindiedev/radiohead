@@ -108,7 +108,7 @@ const Withdraw = () => {
 						<td>{songsCreated.length || 0}</td>
 					</tr>
 					<tr>
-						<td>Revenue (Artist's)</td>
+						<td>Revenue (Artist)</td>
 						<td>{Revenue?.artistRevenueTotal || 0}</td>
 					</tr>
 					<tr>

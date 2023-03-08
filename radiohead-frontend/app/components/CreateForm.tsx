@@ -8,7 +8,7 @@ import { useDebounce } from "use-debounce";
 import { parseEther } from "ethers/lib/utils.js";
 import { ErrorMessage } from "@hookform/error-message";
 import { toast } from "react-toastify";
-import { NFTSTORAGEAPI, RADIOHEAD_GOERLI } from "@/constants";
+import { NFTSTORAGEAPI, ADDRESS } from "@/constants";
 
 export default function CreateForm() {
 	const {
@@ -25,7 +25,7 @@ export default function CreateForm() {
 	const deBouncedInputData = useDebounce(getValues(), 1000)[0];
 
 	const { config } = usePrepareContractWrite({
-		address: RADIOHEAD_GOERLI,
+		address: ADDRESS,
 		abi: radioheadABI,
 		functionName: "createSong",
 		enabled: isConnected && Boolean(nftURI),
@@ -110,7 +110,7 @@ export default function CreateForm() {
 		handleSubmit(handleNFTStorage)();
 		toast.promise(handleNFTStorage, {
 			pending: "Please wait while we upload your song to IPFS",
-			success: "Successfully uploaded 👌. Press the create the song button",
+			success: "Successfully uploaded 👌. Now press the create song button",
 			error: "Something went wrong 🤯",
 		});
 	};

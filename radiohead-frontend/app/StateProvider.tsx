@@ -13,7 +13,7 @@ import { Song, metadata, songWithMetadata, songsOwnedByUser } from "@/types";
 import { demoSongs } from "./demosongs";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { RADIOHEAD_GOERLI } from "@/constants";
+import { ADDRESS } from "@/constants";
 
 export type contextType = {
 	songs: songWithMetadata[];
@@ -75,7 +75,7 @@ export function StateProvider({
 
 	const provider = useProvider();
 	const contract = useContract({
-		address: RADIOHEAD_GOERLI, //v4
+		address: ADDRESS, //v4
 		abi: radioheadABI,
 		signerOrProvider: provider,
 	});
@@ -163,7 +163,7 @@ export function StateProvider({
 		isLoading,
 		refetch: refetchAllSongs,
 	} = useContractRead({
-		address: RADIOHEAD_GOERLI,
+		address: ADDRESS,
 		abi: radioheadABI,
 		functionName: "getSongs",
 		cacheTime: 500,
@@ -181,7 +181,7 @@ export function StateProvider({
 	});
 
 	useContractEvent({
-		address: RADIOHEAD_GOERLI,
+		address: ADDRESS,
 		abi: radioheadABI,
 		eventName: "regularSongBought",
 		listener(id) {
@@ -201,7 +201,7 @@ export function StateProvider({
 	});
 
 	useContractEvent({
-		address: RADIOHEAD_GOERLI,
+		address: ADDRESS,
 		abi: radioheadABI,
 		eventName: "limitedSongBought",
 		listener(id) {
@@ -221,7 +221,7 @@ export function StateProvider({
 	});
 
 	useContractEvent({
-		address: RADIOHEAD_GOERLI,
+		address: ADDRESS,
 		abi: radioheadABI,
 		eventName: "songCreated",
 		listener(songId, ltdSongId) {
@@ -244,7 +244,7 @@ export function StateProvider({
 	});
 
 	useContractEvent({
-		address: RADIOHEAD_GOERLI,
+		address: ADDRESS,
 		abi: radioheadABI,
 		eventName: "withdrawnFunds",
 		listener(caller) {

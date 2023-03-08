@@ -1,3 +1,4 @@
+"use client";
 const About = () => {
 	return (
 		<div className="grid grid-rows-[9fr,_1fr] h-full">

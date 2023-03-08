@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 const About = () => {
@@ -29,7 +30,7 @@ const About = () => {
 								</button>
 							</div>
 							<div className="tooltip tooltip-bottom" data-tip="whitepaper">
-								<Link
+								<a
 									className="bg-secondary p-3 font-semibold text-white inline-flex items-center space-x-2 rounded"
 									href="/docs/whitepaper.pdf"
 									//target="_blank"
@@ -49,7 +50,7 @@ const About = () => {
 											d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"
 										/>
 									</svg>
-								</Link>
+								</a>
 							</div>
 							<div className="tooltip tooltip-bottom" data-tip="source code">
 								<a

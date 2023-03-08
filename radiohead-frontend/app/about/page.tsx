@@ -33,8 +33,7 @@ const About = () => {
 								<a
 									className="bg-secondary p-3 font-semibold text-white inline-flex items-center space-x-2 rounded"
 									href="/docs/whitepaper.pdf"
-									//target="_blank"
-									download
+									target="_blank"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"

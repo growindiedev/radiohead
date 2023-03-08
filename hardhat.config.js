@@ -22,5 +22,5 @@ module.exports = {
 	},
 };
 
-//0x445d0804789E7c0ABa9844183f9E85EA765837dB :fantom_radiohead
-//0xD6796881771a30B8Bd65C6327Dc76A0e4881b8Be :fantom_escrow
+//0x445d0804789E7c0ABa9844183f9E85EA765837dB :fantom radiohead
+//0xD6796881771a30B8Bd65C6327Dc76A0e4881b8Be :fantom escrow

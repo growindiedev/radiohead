@@ -8,7 +8,7 @@ import { useDebounce } from "use-debounce";
 import { parseEther } from "ethers/lib/utils.js";
 import { ErrorMessage } from "@hookform/error-message";
 import { toast } from "react-toastify";
-import { NFTSTORAGEAPI, RADIOHEAD_GOERLI } from "@/constants";
+import { NFTSTORAGEAPI, CONTRACT_ADDRESS } from "@/constants";
 
 export default function CreateForm() {
 	const {
@@ -25,7 +25,7 @@ export default function CreateForm() {
 	const deBouncedInputData = useDebounce(getValues(), 1000)[0];
 
 	const { config } = usePrepareContractWrite({
-		address: RADIOHEAD_GOERLI,
+		address: CONTRACT_ADDRESS,
 		abi: radioheadABI,
 		functionName: "createSong",
 		enabled: isConnected && Boolean(nftURI),

@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { parseEther } from "ethers/lib/utils.js";
 
 import React from "react";
-import { RADIOHEAD_GOERLI } from "@/constants";
+import { CONTRACT_ADDRESS } from "@/constants";
 
 const SongCard = ({
 	songId,
@@ -22,7 +22,7 @@ const SongCard = ({
 	const { address, isConnected } = useAccount();
 
 	const { config: regularConfig } = usePrepareContractWrite({
-		address: RADIOHEAD_GOERLI,
+		address: CONTRACT_ADDRESS,
 		abi: radioheadABI,
 		functionName: "buyRegularSong",
 		enabled: isConnected,
@@ -67,7 +67,7 @@ const SongCard = ({
 	});
 
 	const { config: limitedConfig } = usePrepareContractWrite({
-		address: RADIOHEAD_GOERLI,
+		address: CONTRACT_ADDRESS,
 		abi: radioheadABI,
 		functionName: "buyLimitedSong",
 		enabled: isConnected,
